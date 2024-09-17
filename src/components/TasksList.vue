@@ -6,10 +6,10 @@
         </form>
         <ul>
             <li
-                v-for="(task, index) in tasks"
-                :key="index"
+                v-for="task in store.tasks"
+                :key="task.name"
                 :class="{ done : task.done }"
-                @click="() => toggleCompletion(index)"
+                @click="() => store.toggleCompletion(task.name)"
             >{{ task.name }}</li>
         </ul>
     </section>
@@ -17,21 +17,15 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useTasksStore } from '@/stores/tasks'
 
 const name = ref('')
-const tasks = ref([])
+const store = useTasksStore()
 
 function addTask() {
     if (name.value.length === 0) return
-    tasks.value.push({
-        name: name.value,
-        done: false,
-    })
+    store.add(name.value)
     name.value = ''
-}
-
-function toggleCompletion(index) {
-    tasks.value[index].done = !tasks.value[index].done
 }
 </script>
 

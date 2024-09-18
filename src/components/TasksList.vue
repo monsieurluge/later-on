@@ -6,12 +6,11 @@
             <input type="text" placeholder="+ add a task" v-model="name" />
         </form>
         <ul v-show="store.tasks.length > 0">
-            <li
+            <TaskItem
                 v-for="task in store.tasks"
                 :key="task.name"
-                :class="{ done : task.done }"
-                @click="() => store.toggleCompletion(task.name)"
-            >{{ task.name }}</li>
+                v-bind="task"
+            />
         </ul>
         <div class="separator bottom-separator"></div>
     </section>
@@ -20,6 +19,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useTasksStore } from '@/stores/tasks'
+import TaskItem from './TaskItem'
 
 const name = ref('')
 const store = useTasksStore()
@@ -93,32 +93,5 @@ ul {
     margin: 3px 0 0 0;
     padding: 0;
     list-style: none;
-}
-
-li {
-    width: 100%;
-    padding: 10px;
-    font-size: 1em;
-    font-family: monospace, sans;
-    background-color: var(--b-low);
-    border-radius: 5px;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    cursor: pointer;
-    box-sizing: border-box;
-    transition: background-color 0.3s;
-}
-
-li:not(:last-child) {
-    margin-bottom: 3px;
-}
-
-li:hover {
-    background-color: var(--b-med);
-}
-
-.done {
-    text-decoration: line-through;
 }
 </style>

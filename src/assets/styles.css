@@ -1,4 +1,26 @@
+:root {
+    /* default theme (light) */
+    --background: #eeefee;
+    --f-high: #313131;
+    --f-med: #e73d50;
+    --f-low: #cccccc;
+    --f-inv: #ffffff;
+    --b-high: #201e21;
+    --b-med: #ffffff;
+    --b-low: #f5f5f5;
+    --b-inv: #000000;
+    /* sizes */
+    --header-height: 60px;
+}
+
 html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: var(--background);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100cqh;
 }

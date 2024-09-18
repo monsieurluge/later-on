@@ -2,15 +2,29 @@
     <section class="tasks-list">
         <div class="separator top-separator"></div>
         <h2>today</h2>
-        <form @submit.prevent="addTask">
+        <form
+            @dragover.prevent="onDragOverForm"
+            @dragleave="onDragLeaveForm"
+            @drop="onDropForm"
+            @submit.prevent="addTask"
+        >
             <input type="text" placeholder="+ add a task" v-model="name" />
+            <div v-if="isFormDropTarget" class="dummy-item"></div>
         </form>
         <ul v-show="store.tasks.length > 0">
-            <TaskItem
-                v-for="task in store.tasks"
-                :key="task.name"
-                v-bind="task"
-            />
+            <template v-for="task in store.tasks" :key="task.name">
+                <TaskItem
+                    v-bind="task"
+                    draggable="true"
+                    @dragend="onDragEnd"
+                    @dragover.prevent="onDragOver(task.name)"
+                    @dragstart="onDragStart(task.name)"
+                    @drop="onDrop"
+                    class="task-item"
+                />
+                <div v-if="task.name === dropTarget" class="dummy-item"></div>
+                <!-- <div class="dummy-item"></div> -->
+            </template>
         </ul>
         <div class="separator bottom-separator"></div>
     </section>
@@ -21,6 +35,9 @@ import { ref } from 'vue'
 import { useTasksStore } from '@/stores/tasks'
 import TaskItem from './TaskItem'
 
+const draggedTask = ref(null)
+const dropTarget = ref(null)
+const isFormDropTarget = ref(false)
 const name = ref('')
 const store = useTasksStore()
 
@@ -28,6 +45,41 @@ function addTask() {
     if (name.value.length === 0) return
     store.add(name.value)
     name.value = ''
+}
+
+function onDragEnd() {
+    dropTarget.value = null
+}
+
+function onDragLeaveForm() {
+    isFormDropTarget.value = false
+}
+
+function onDragOver(name) {
+    dropTarget.value = name
+}
+
+function onDragOverForm() {
+    dropTarget.value = null
+    isFormDropTarget.value = true
+}
+
+function onDragStart(name) {
+    draggedTask.value = name
+}
+
+function onDrop() {
+    store.moveAfter(draggedTask.value, dropTarget.value)
+    draggedTask.value = null
+    dropTarget.value = null
+    isFormDropTarget.value = false
+}
+
+function onDropForm() {
+    store.moveOnTop(draggedTask.value)
+    draggedTask.value = null
+    dropTarget.value = null
+    isFormDropTarget.value = false
 }
 </script>
 
@@ -93,5 +145,23 @@ ul {
     margin: 3px 0 0 0;
     padding: 0;
     list-style: none;
+}
+
+.task-item:not(:last-child) {
+    margin-bottom: 3px;
+}
+
+.dummy-item {
+    height: 3px;
+    background-color: var(--b-med);
+    border-radius: 1px;
+}
+
+.dummy-item:not(:last-child) {
+    margin-bottom: 3px;
+}
+
+form .dummy-item {
+    margin-top: 3px;
 }
 </style>

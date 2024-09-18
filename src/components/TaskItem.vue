@@ -9,7 +9,7 @@
 import { defineProps } from 'vue'
 import { useTasksStore } from '@/stores/tasks'
 
-const props = defineProps([ 'done', 'name', 'size' ])
+const props = defineProps([ 'done', 'dragged', 'name', 'size' ])
 
 const store = useTasksStore()
 
@@ -39,10 +39,6 @@ li {
     cursor: pointer;
     box-sizing: border-box;
     transition: background-color 0.3s;
-}
-
-li:not(:last-child) {
-    margin-bottom: 3px;
 }
 
 li.next {

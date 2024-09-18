@@ -27,6 +27,22 @@ export const useTasksStore = defineStore('tasks', () => {
         task.size = sizes.get(task.size).next
     }
 
+    function moveAfter(name, target) {
+        if (name === target) return
+        const task = tasks.value.find(task => task.name === name)
+        const index = tasks.value.indexOf(task)
+        tasks.value.splice(index, 1)
+        const position = tasks.value.findIndex(task => task.name === target) + 1
+        tasks.value.splice(position, 0, task)
+    }
+
+    function moveOnTop(name) {
+        const task = tasks.value.find(task => task.name === name)
+        const index = tasks.value.indexOf(task)
+        tasks.value.splice(index, 1)
+        tasks.value.unshift(task)
+    }
+
     function toggleCompletion(name) {
         const task = tasks.value.find(task => task.name === name)
         if (!task) return
@@ -36,6 +52,8 @@ export const useTasksStore = defineStore('tasks', () => {
     return {
         add,
         changeSize,
+        moveAfter,
+        moveOnTop,
         tasks,
         toggleCompletion,
     }

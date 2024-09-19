@@ -1,24 +1,20 @@
 import { ClientSideStorage } from '@/common/ClientSideStorage'
+import { taskSizes } from '@/common/taskSizes'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-const sizes = new Map()
-sizes.set('size', { next: 'small' })
-sizes.set('small', { next: 'medium' })
-sizes.set('medium', { next: 'large' })
-sizes.set('large', { next: 'size' })
-
 export const useTasksStore = defineStore('tasks', () => {
     const storage = new ClientSideStorage('later-on')
-    const tasks = ref(storage.load())
+    const tasks = ref(storage.load([]))
 
-    function add(name) {
+    function add({ name, list }) {
         const trimmedName = name.trim()
         if (trimmedName.length === 0) return
-        const found = tasks.value.find((task) => task.name === trimmedName)
-        if (found) return
+        const taskExists = tasks.value.find((task) => task.name === trimmedName)
+        if (taskExists) return
         tasks.value.push({
             done: false,
+            list,
             name: trimmedName,
             size: 'size',
         })
@@ -28,9 +24,13 @@ export const useTasksStore = defineStore('tasks', () => {
     function changeSize(name) {
         const task = tasks.value.find((task) => task.name === name)
         if (!task) return
-        if (!sizes.has(task.size)) return
-        task.size = sizes.get(task.size).next
+        if (!taskSizes.has(task.size)) return
+        task.size = taskSizes.get(task.size).next
         storage.save(tasks.value)
+    }
+
+    function from(list) {
+        return tasks.value.filter((task) => task.list === list)
     }
 
     function moveAfter(name, target) {
@@ -61,6 +61,7 @@ export const useTasksStore = defineStore('tasks', () => {
     return {
         add,
         changeSize,
+        from,
         moveAfter,
         moveOnTop,
         tasks,

@@ -2,15 +2,15 @@
     <header>
         <h1>later on</h1>
     </header>
-    <TasksList />
+    <TheTasksLists />
 </template>
 
 <script>
-import TasksList from './components/TasksList.vue'
+import TheTasksLists from './components/TheTasksLists.vue';
 
 export default {
     name: 'App',
-    components: { TasksList },
+    components: { TheTasksLists },
 }
 </script>
 
@@ -31,4 +31,5 @@ h1 {
     font-weight: lighter;
     line-height: 60px;
 }
+
 </style>

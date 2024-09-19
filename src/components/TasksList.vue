@@ -1,7 +1,5 @@
 <template>
     <section class="tasks-list">
-        <div class="separator top-separator"></div>
-        <h2>today</h2>
         <form
             @dragleave="onDragLeaveForm"
             @dragover.prevent="onDragOverForm"
@@ -12,38 +10,38 @@
             <div v-if="isFormDropTarget" class="dummy-item"></div>
         </form>
         <ul v-show="store.tasks.length > 0">
-            <template v-for="task in store.tasks" :key="task.name">
+            <template v-for="task in store.from(listName)" :key="task.name">
                 <TaskItem
                     class="task-item"
                     draggable="true"
                     v-bind="task"
-                    @clicked="store.toggleCompletion(task.name)"
+                    @clicked="onTaskClicked(task.name)"
                     @dragend="onDragEnd"
                     @dragover.prevent="onDragOver(task.name)"
                     @dragstart="onDragStart(task.name)"
                     @drop="onDrop"
-                    @sizeButtonClicked="store.changeSize(task.name)"
+                    @sizeButtonClicked="onSizeButtonClicked(task.name)"
                 />
                 <div v-if="task.name === dropTarget" class="dummy-item"></div>
             </template>
         </ul>
-        <div class="separator bottom-separator"></div>
     </section>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useTasksStore } from '@/stores/tasks'
+import { defineProps, ref } from 'vue'
+import { useTasksStore } from '@/stores/tasksStore'
 import TaskItem from './TaskItem'
 
 const draggedTask = ref(null)
 const dropTarget = ref(null)
 const isFormDropTarget = ref(false);
 const name = ref('')
+const props = defineProps(['listName'])
 const store = useTasksStore()
 
 function addTask() {
-    store.add(name.value)
+    store.add({ name: name.value, list: props.listName })
     name.value = ''
 }
 
@@ -78,6 +76,14 @@ function onDropForm() {
     resetDraggableContext()
 }
 
+function onSizeButtonClicked(name) {
+    store.changeSize(name)
+}
+
+function onTaskClicked(name) {
+    store.toggleCompletion(name)
+}
+
 function resetDraggableContext() {
     draggedTask.value = null
     dropTarget.value = null
@@ -86,46 +92,6 @@ function resetDraggableContext() {
 </script>
 
 <style scoped>
-section {
-    width: 400px;
-    height: calc(100% - var(--header-height));
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-}
-
-.separator {
-    --dot-bg: var(--background);
-    --dot-color: var(--f-low);
-    --dot-size: 2px;
-    --dot-space: 10px;
-    background-color: var(--background);
-    background:
-		linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
-		linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
-		var(--dot-color);
-}
-
-.top-separator {
-    height: 56px;
-    margin: 10px 0 10px 3px;
-}
-
-.bottom-separator {
-    flex: 1;
-    min-height: 60px;
-    margin: 10px 0 0 3px;
-}
-
-h2 {
-    margin: 0 0 3px;
-    padding: 10px;
-    font-size: 1rem;
-    font-family: monospace, sans;
-    background-color: var(--b-low);
-    border-radius: 5px;
-}
-
 input {
     width: 100%;
     padding: 10px;

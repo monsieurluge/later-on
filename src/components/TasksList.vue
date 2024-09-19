@@ -3,8 +3,8 @@
         <div class="separator top-separator"></div>
         <h2>today</h2>
         <form
-            @dragover.prevent="onDragOverForm"
             @dragleave="onDragLeaveForm"
+            @dragover.prevent="onDragOverForm"
             @drop="onDropForm"
             @submit.prevent="addTask"
         >
@@ -14,15 +14,15 @@
         <ul v-show="store.tasks.length > 0">
             <template v-for="task in store.tasks" :key="task.name">
                 <TaskItem
-                    v-bind="task"
+                    class="task-item"
                     draggable="true"
+                    v-bind="task"
                     @clicked="store.toggleCompletion(task.name)"
                     @dragend="onDragEnd"
                     @dragover.prevent="onDragOver(task.name)"
                     @dragstart="onDragStart(task.name)"
                     @drop="onDrop"
                     @sizeButtonClicked="store.changeSize(task.name)"
-                    class="task-item"
                 />
                 <div v-if="task.name === dropTarget" class="dummy-item"></div>
             </template>
@@ -38,12 +38,11 @@ import TaskItem from './TaskItem'
 
 const draggedTask = ref(null)
 const dropTarget = ref(null)
-const isFormDropTarget = ref(false)
+const isFormDropTarget = ref(false);
 const name = ref('')
 const store = useTasksStore()
 
 function addTask() {
-    if (name.value.length === 0) return
     store.add(name.value)
     name.value = ''
 }
@@ -71,13 +70,15 @@ function onDragStart(name) {
 
 function onDrop() {
     store.moveAfter(draggedTask.value, dropTarget.value)
-    draggedTask.value = null
-    dropTarget.value = null
-    isFormDropTarget.value = false
+    resetDraggableContext()
 }
 
 function onDropForm() {
     store.moveOnTop(draggedTask.value)
+    resetDraggableContext()
+}
+
+function resetDraggableContext() {
     draggedTask.value = null
     dropTarget.value = null
     isFormDropTarget.value = false

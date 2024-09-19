@@ -1,9 +1,10 @@
+
 <template>
     <li :class="{ done }" @click="$emit('clicked')">
         <span class="name">{{ name }}</span>
         <button
             class="size-button"
-            :class="size"
+            :class="`${size}-value`"
             @click.prevent.stop="$emit('sizeButtonClicked')"
         >{{ size }}</button>
     </li>
@@ -64,15 +65,16 @@ li .name {
     transition: background-color 0.3s, color 0.3s;
 }
 
-.size-button.size {
+.size-button.size-value {
     color: var(--b-low);
 }
 
-li:hover .size-button.size {
+li:hover .size-button.size-value {
     color: var(--f-low);
 }
 
-.size-button:hover {
+.size-button:hover,
+li:hover .size-button:hover.size-value {
     color: var(--f-high);
 }
 </style>

@@ -1,25 +1,18 @@
 <template>
-    <li :class="{ done }" @click="toggleCompletion">
+    <li :class="{ done }" @click="$emit('clicked')">
         <span class="name">{{ name }}</span>
-        <button class="size-button" :class="size" @click.prevent.stop="changeSize">{{ size }}</button>
+        <button
+            class="size-button"
+            :class="size"
+            @click.prevent.stop="$emit('sizeButtonClicked')"
+        >{{ size }}</button>
     </li>
 </template>
 
 <script setup>
 import { defineProps } from 'vue'
-import { useTasksStore } from '@/stores/tasks'
 
-const props = defineProps([ 'done', 'dragged', 'name', 'size' ])
-
-const store = useTasksStore()
-
-function changeSize() {
-    store.changeSize(props.name)
-}
-
-function toggleCompletion() {
-    store.toggleCompletion(props.name)
-}
+defineProps([ 'done', 'name', 'size' ])
 </script>
 
 <style scoped>

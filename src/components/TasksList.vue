@@ -16,14 +16,15 @@
                 <TaskItem
                     v-bind="task"
                     draggable="true"
+                    @clicked="store.toggleCompletion(task.name)"
                     @dragend="onDragEnd"
                     @dragover.prevent="onDragOver(task.name)"
                     @dragstart="onDragStart(task.name)"
                     @drop="onDrop"
+                    @sizeButtonClicked="store.changeSize(task.name)"
                     class="task-item"
                 />
                 <div v-if="task.name === dropTarget" class="dummy-item"></div>
-                <!-- <div class="dummy-item"></div> -->
             </template>
         </ul>
         <div class="separator bottom-separator"></div>

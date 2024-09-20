@@ -6,6 +6,10 @@
             :active="current === 'today'"
             @click="$emit('today-clicked')"
         />
+        <ListMenuEditButton
+            :isActive="config.edit"
+            @click="config.edit = !config.edit"
+        />
         <ListMenuButton
             label="tomorrow"
             right="true"
@@ -17,9 +21,13 @@
 
 <script setup>
 import { defineProps } from 'vue'
+import { useConfigStore } from '@/stores/configStore'
 import ListMenuButton from './ListMenuButton'
+import ListMenuEditButton from './ListMenuEditButton'
 
 defineProps(['current'])
+
+const config = useConfigStore()
 </script>
 
 <style scoped>

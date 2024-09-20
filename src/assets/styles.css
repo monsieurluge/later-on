@@ -11,6 +11,9 @@
     --b-inv: #000000;
     /* sizes */
     --header-height: 60px;
+    --item-height: 40px;
+    /* config */
+    --transition: 0.3s;
 }
 
 html {

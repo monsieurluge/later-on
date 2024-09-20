@@ -49,6 +49,9 @@ button {
     border-radius: 0;
     background-color: var(--b-low);
     cursor: default;
+    transition:
+        color var(--transition),
+        background-color var(--transition);
 }
 
 button:not(.active):hover,

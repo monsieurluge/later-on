@@ -61,6 +61,17 @@ export const useTasksStore = defineStore('tasks', () => {
         storage.save(tasks.value)
     }
 
+    function rename({ newName, oldName }) {
+        const task = tasks.value.find((task) => task.name === oldName)
+        if (!task) return
+        const trimmedName = newName.trim()
+        if (trimmedName.length === 0) return
+        const taskExists = tasks.value.find((task) => task.name === trimmedName)
+        if (taskExists) return
+        task.name = trimmedName
+        storage.save(tasks.value)
+    }
+
     function toggleCompletion(name) {
         const task = tasks.value.find((task) => task.name === name)
         if (!task) return
@@ -75,6 +86,7 @@ export const useTasksStore = defineStore('tasks', () => {
         moveAfter,
         moveOnTop,
         moveTo,
+        rename,
         tasks,
         toggleCompletion,
     }

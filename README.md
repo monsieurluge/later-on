@@ -21,3 +21,9 @@ npm run build
 ```
 npm run lint
 ```
+
+## Resources
+
+### icons
+
+[Lets Icons](https://icon-sets.iconify.design/lets-icons/) from [iconify.design](https://iconify.design).

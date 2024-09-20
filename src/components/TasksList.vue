@@ -13,9 +13,9 @@
             <template v-for="task in store.from(listName)" :key="task.name">
                 <TaskItem
                     class="task-item"
-                    draggable="true"
                     v-bind="task"
-                    @clicked="onTaskClicked(task.name)"
+                    :draggable="isDraggable"
+                    :editable="config.edit"
                     @dragend="onDragEnd"
                     @dragover.prevent="onDragOver(task.name)"
                     @dragstart="onDragStart($event, task.name)"
@@ -29,16 +29,22 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue'
+import { computed, defineProps, ref } from 'vue'
+import { useConfigStore } from '@/stores/configStore'
 import { useTasksStore } from '@/stores/tasksStore'
 import TaskItem from './TaskItem'
 
+const config = useConfigStore()
 const draggedTask = ref(null)
 const dropTarget = ref(null)
 const isFormDropTarget = ref(false);
 const name = ref('')
 const props = defineProps(['listName'])
 const store = useTasksStore()
+
+const isDraggable = computed(() => {
+    return !config.edit
+})
 
 function addTask() {
     store.add({ name: name.value, list: props.listName })
@@ -79,10 +85,6 @@ function onDropForm() {
 
 function onSizeButtonClicked(name) {
     store.changeSize(name)
-}
-
-function onTaskClicked(name) {
-    store.toggleCompletion(name)
 }
 
 function resetDraggableContext() {

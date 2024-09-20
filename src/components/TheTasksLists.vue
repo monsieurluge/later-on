@@ -1,8 +1,10 @@
 <template>
     <section class="tasks-lists">
         <div class="separator top-separator"></div>
-        <TheListsSwitcher
+        <TheListsMenu
             :current="currentList"
+            @dropped-on-today="currentList = 'today'"
+            @dropped-on-tomorrow="currentList = 'tomorrow'"
             @today-clicked="currentList = 'today'"
             @tomorrow-clicked="currentList = 'tomorrow'"
         />
@@ -15,7 +17,7 @@
 <script setup>
 import { ref } from 'vue'
 import TasksList from './TasksList.vue'
-import TheListsSwitcher from './TheListsSwitcher.vue'
+import TheListsMenu from './TheListsMenu.vue'
 
 const currentList = ref('today')
 </script>

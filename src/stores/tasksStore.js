@@ -51,6 +51,16 @@ export const useTasksStore = defineStore('tasks', () => {
         storage.save(tasks.value)
     }
 
+    function moveTo({ name, list }) {
+        const task = tasks.value.find((task) => task.name === name)
+        if (!task) return
+        task.list = list
+        const index = tasks.value.indexOf(task)
+        tasks.value.splice(index, 1)
+        tasks.value.push(task)
+        storage.save(tasks.value)
+    }
+
     function toggleCompletion(name) {
         const task = tasks.value.find((task) => task.name === name)
         if (!task) return
@@ -64,6 +74,7 @@ export const useTasksStore = defineStore('tasks', () => {
         from,
         moveAfter,
         moveOnTop,
+        moveTo,
         tasks,
         toggleCompletion,
     }

@@ -18,7 +18,7 @@
                     @clicked="onTaskClicked(task.name)"
                     @dragend="onDragEnd"
                     @dragover.prevent="onDragOver(task.name)"
-                    @dragstart="onDragStart(task.name)"
+                    @dragstart="onDragStart($event, task.name)"
                     @drop="onDrop"
                     @sizeButtonClicked="onSizeButtonClicked(task.name)"
                 />
@@ -62,8 +62,9 @@ function onDragOverForm() {
     isFormDropTarget.value = true
 }
 
-function onDragStart(name) {
+function onDragStart(event, name) {
     draggedTask.value = name
+    event.dataTransfer.setData('taskName', name)
 }
 
 function onDrop() {

@@ -61,6 +61,14 @@ export const useTasksStore = defineStore('tasks', () => {
         storage.save(tasks.value)
     }
 
+    function remove(name) {
+        const task = tasks.value.find((task) => task.name === name)
+        if (!task) return
+        const index = tasks.value.indexOf(task)
+        tasks.value.splice(index, 1)
+        storage.save(tasks.value)
+    }
+
     function rename({ newName, oldName }) {
         const task = tasks.value.find((task) => task.name === oldName)
         if (!task) return
@@ -87,6 +95,7 @@ export const useTasksStore = defineStore('tasks', () => {
         moveOnTop,
         moveTo,
         rename,
+        remove,
         tasks,
         toggleCompletion,
     }

@@ -4,15 +4,18 @@
             <input
                 class="name"
                 type="text"
+                placeholder="remove the task ?"
                 :value="name"
+                @focusin="onNameChange"
                 @input="onNameChange"
                 @blur="submit"
                 @keyup.enter="submit"
             />
+            <button @click.prevent.stop="$emit('removeButtonClicked')">del</button>
         </template>
         <template v-else>
             <span class="name">{{ name }}</span>
-            <button class="size-button" :class="`${size}-value`" @click.prevent.stop="$emit('sizeButtonClicked')">{{ size }}</button>
+            <button :class="`${size}-value`" @click.prevent.stop="$emit('sizeButtonClicked')">{{ size }}</button>
         </template>
     </li>
 </template>
@@ -27,6 +30,10 @@ const newName = ref('')
 const tasks = useTasksStore()
 
 function submit() {
+    if (newName.value.length === 0) {
+        tasks.remove(props.name)
+        return
+    }
     tasks.rename({ oldName: props.name, newName: newName.value })
 }
 
@@ -75,12 +82,8 @@ li:hover {
 input.name {
     width: 100%;
     height: 100%;
-    background-color: var(--b-low);
     border: none;
-}
-
-input.name:hover {
-    background-color: var(--b-med);
+    background-color: transparent;
 }
 
 input.error {
@@ -92,7 +95,7 @@ input.error {
     text-decoration: line-through;
 }
 
-.size-button {
+button {
     margin-right: 10px;
     color: var(--f-low);
     font-family: monospace, sans;
@@ -107,16 +110,16 @@ input.error {
         color 0.3s;
 }
 
-.size-button.size-value {
+button.size-value {
     color: var(--b-low);
 }
 
-li:hover .size-button.size-value {
+li:hover button.size-value {
     color: var(--f-low);
 }
 
-.size-button:hover,
-li:hover .size-button:hover.size-value {
+button:hover,
+li:hover button:hover.size-value {
     color: var(--f-high);
 }
 </style>

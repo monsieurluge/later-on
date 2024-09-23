@@ -11,11 +11,11 @@
                 @blur="submit"
                 @keyup.enter="submit"
             />
-            <button @click.prevent.stop="$emit('removeButtonClicked')">del</button>
+            <button class="dimmed" @click.prevent.stop="$emit('removeButtonClicked')">del</button>
         </template>
         <template v-else>
             <span class="name">{{ name }}</span>
-            <button :class="`${size}-value`" @click.prevent.stop="$emit('sizeButtonClicked')">{{ size }}</button>
+            <button :class="{ dimmed: size === 'size' }" @click.prevent.stop="$emit('sizeButtonClicked')">{{ size }}</button>
         </template>
     </li>
 </template>
@@ -110,16 +110,16 @@ button {
         color 0.3s;
 }
 
-button.size-value {
+button.dimmed {
     color: var(--b-low);
 }
 
-li:hover button.size-value {
+li:hover button.dimmed {
     color: var(--f-low);
 }
 
 button:hover,
-li:hover button:hover.size-value {
+li:hover button:hover {
     color: var(--f-high);
 }
 </style>

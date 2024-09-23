@@ -1,14 +1,6 @@
 <template>
     <section class="tasks-list">
-        <form
-            @dragleave="onDragLeaveForm"
-            @dragover.prevent="onDragOverForm"
-            @drop="onDropForm"
-            @submit.prevent="addTask"
-        >
-            <input type="text" placeholder="+ add a task" v-model="name" />
-            <div v-if="isFormDropTarget" class="dummy-item"></div>
-        </form>
+        <TaskAddForm :listName="listName" />
         <ul v-show="store.tasks.length > 0">
             <template v-for="task in store.from(listName)" :key="task.name">
                 <TaskItem
@@ -16,7 +8,7 @@
                     v-bind="task"
                     :draggable="isDraggable"
                     :editable="config.edit"
-                    @dragend="onDragEnd"
+                    @dragleave="onDragLeave"
                     @dragover.prevent="onDragOver(task.name)"
                     @dragstart="onDragStart($event, task.name)"
                     @drop="onDrop"
@@ -33,55 +25,36 @@
 import { computed, defineProps, ref } from 'vue'
 import { useConfigStore } from '@/stores/configStore'
 import { useTasksStore } from '@/stores/tasksStore'
+import TaskAddForm from './TaskAddForm'
 import TaskItem from './TaskItem'
 
+defineProps(['listName'])
+
 const config = useConfigStore()
-const draggedTask = ref(null)
 const dropTarget = ref(null)
 const isFormDropTarget = ref(false);
-const name = ref('')
-const props = defineProps(['listName'])
 const store = useTasksStore()
 
 const isDraggable = computed(() => {
     return !config.edit
 })
 
-function addTask() {
-    store.add({ name: name.value, list: props.listName })
-    name.value = ''
-}
-
-function onDragEnd() {
+function onDragLeave() {
     dropTarget.value = null
-}
-
-function onDragLeaveForm() {
-    isFormDropTarget.value = false
 }
 
 function onDragOver(name) {
     dropTarget.value = name
 }
 
-function onDragOverForm() {
-    dropTarget.value = null
-    isFormDropTarget.value = true
-}
-
 function onDragStart(event, name) {
-    draggedTask.value = name
     event.dataTransfer.setData('taskName', name)
 }
 
-function onDrop() {
-    store.moveAfter(draggedTask.value, dropTarget.value)
-    resetDraggableContext()
-}
-
-function onDropForm() {
-    store.moveOnTop(draggedTask.value)
-    resetDraggableContext()
+function onDrop(event) {
+    store.moveAfter(event.dataTransfer.getData('taskName'), dropTarget.value)
+    dropTarget.value = null
+    isFormDropTarget.value = false
 }
 
 function onRemoveButtonClicked(name) {
@@ -91,31 +64,9 @@ function onRemoveButtonClicked(name) {
 function onSizeButtonClicked(name) {
     store.changeSize(name)
 }
-
-function resetDraggableContext() {
-    draggedTask.value = null
-    dropTarget.value = null
-    isFormDropTarget.value = false
-}
 </script>
 
 <style scoped>
-input {
-    width: 100%;
-    padding: 10px;
-    font-size: 1em;
-    font-family: monospace, sans;
-    background-color: var(--b-low);
-    border: none;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-input:hover,
-input:focus {
-    background-color: var(--b-med);
-}
-
 ul {
     width: 100%;
     margin: 3px 0 0 0;
@@ -135,9 +86,5 @@ ul {
 
 .dummy-item:not(:last-child) {
     margin-bottom: 3px;
-}
-
-form .dummy-item {
-    margin-top: 3px;
 }
 </style>

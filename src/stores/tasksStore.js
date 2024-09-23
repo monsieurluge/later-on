@@ -5,7 +5,7 @@ import { ref } from 'vue'
 
 export const useTasksStore = defineStore('tasks', () => {
     const storage = new ClientSideStorage('later-on')
-    const tasks = ref(storage.load([]))
+    const tasks = ref(storage.load([]).filter(task => task.list === 'tomorrow' || !task.done).map(task => ({ ...task, list: 'today' })))
 
     function add({ name, list }) {
         const trimmedName = name.trim()

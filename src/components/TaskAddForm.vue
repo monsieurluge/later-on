@@ -45,11 +45,21 @@ input {
     border: none;
     border-radius: 5px;
     box-sizing: border-box;
+    transition: background-color var(--transition);
 }
 
 input:hover,
 input:focus {
     background-color: var(--b-med);
+}
+
+input::placeholder {
+    color: var(--f-low);
+    transition: color var(--transition);
+}
+
+input:hover::placeholder {
+    color: var(--f-high);
 }
 
 .dummy-item {

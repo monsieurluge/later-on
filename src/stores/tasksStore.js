@@ -1,11 +1,9 @@
-import { ClientSideStorage } from '@/common/ClientSideStorage'
+import { useLocalStorage } from '@vueuse/core'
 import { taskSizes } from '@/common/taskSizes'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
 
 export const useTasksStore = defineStore('tasks', () => {
-    const storage = new ClientSideStorage('later-on')
-    const tasks = ref(storage.load([]).filter(task => task.list === 'tomorrow' || !task.done).map(task => ({ ...task, list: 'today' })))
+    const tasks = useLocalStorage('later-on', [])
 
     function add({ name, list }) {
         const trimmedName = name.trim()
@@ -18,7 +16,6 @@ export const useTasksStore = defineStore('tasks', () => {
             name: trimmedName,
             size: 'size',
         })
-        storage.save(tasks.value)
     }
 
     function changeSize(name) {
@@ -26,7 +23,6 @@ export const useTasksStore = defineStore('tasks', () => {
         if (!task) return
         if (!taskSizes.has(task.size)) return
         task.size = taskSizes.get(task.size).next
-        storage.save(tasks.value)
     }
 
     function from(list) {
@@ -40,7 +36,6 @@ export const useTasksStore = defineStore('tasks', () => {
         tasks.value.splice(index, 1)
         const position = tasks.value.findIndex((task) => task.name === target) + 1
         tasks.value.splice(position, 0, task)
-        storage.save(tasks.value)
     }
 
     function moveOnTop(name) {
@@ -48,7 +43,6 @@ export const useTasksStore = defineStore('tasks', () => {
         const index = tasks.value.indexOf(task)
         tasks.value.splice(index, 1)
         tasks.value.unshift(task)
-        storage.save(tasks.value)
     }
 
     function moveTo({ name, list }) {
@@ -58,7 +52,6 @@ export const useTasksStore = defineStore('tasks', () => {
         const index = tasks.value.indexOf(task)
         tasks.value.splice(index, 1)
         tasks.value.push(task)
-        storage.save(tasks.value)
     }
 
     function remove(name) {
@@ -66,7 +59,6 @@ export const useTasksStore = defineStore('tasks', () => {
         if (!task) return
         const index = tasks.value.indexOf(task)
         tasks.value.splice(index, 1)
-        storage.save(tasks.value)
     }
 
     function rename({ newName, oldName }) {
@@ -77,14 +69,12 @@ export const useTasksStore = defineStore('tasks', () => {
         const taskExists = tasks.value.find((task) => task.name === trimmedName)
         if (taskExists) return
         task.name = trimmedName
-        storage.save(tasks.value)
     }
 
     function toggleCompletion(name) {
         const task = tasks.value.find((task) => task.name === name)
         if (!task) return
         task.done = !task.done
-        storage.save(tasks.value)
     }
 
     return {

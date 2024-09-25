@@ -1,18 +1,19 @@
 <template>
-    <div v-if="config.edit" class="list-item"></div>
+    <div v-if="config.edit" class="dummy-form"></div>
     <form
         v-else
+        :class="{ full: isInputFocused }"
         @dragleave="isDropTarget = false"
         @dragover.prevent="isDropTarget = true"
         @drop="onDrop"
         @submit.prevent="onSubmit"
     >
         <input
-            class="list-item"
             placeholder="+ add a task"
             type="text"
             v-model="name"
-            @blur="name = ''"
+            @blur="resetState"
+            @focusin="isInputFocused = true"
             @input.prevent
         />
         <div v-if="isDropTarget" class="dummy-item"></div>
@@ -25,6 +26,7 @@ import { useConfigStore } from '@/stores/configStore'
 import { useTasksStore } from '@/stores/tasksStore'
 
 const config = useConfigStore()
+const isInputFocused = ref(false)
 const isDropTarget = ref(false)
 const name = ref('')
 const props = defineProps(['listName'])
@@ -39,39 +41,70 @@ function onSubmit() {
     tasks.add({ name: name.value, list: props.listName })
     name.value = ''
 }
+
+function resetState() {
+    isInputFocused.value = false
+    name.value = ''
+}
 </script>
 
 <style scoped>
-.list-item {
+form {
+    width: 100%;
+    min-height: var(--item-height-small);
+    max-height: var(--item-height-small);
+    background-color: var(--b-low);
+    border-radius: var(--border-radius-small);
+    overflow: hidden;
+    transition:
+        min-height var(--transition),
+        max-height var(--transition),
+        background-color var(--transition),
+        border-radius var(--transition);
+}
+
+form:hover,
+form.full {
+    min-height: var(--item-height);
+    max-height: var(--item-height);
+    background-color: var(--b-med);
+    border-radius: var(--border-radius);
+}
+
+input {
+    display: none;
     width: 100%;
     height: var(--item-height);
     padding: 0 10px;
-    font-size: 1em;
+    color: var(--f-high);
     font-family: monospace, sans;
-    background-color: var(--b-low);
+    font-size: 1em;
+    line-height: var(--item-height);
+    background-color: transparent;
     border: none;
-    border-radius: 5px;
     box-sizing: border-box;
-    transition: background-color var(--transition);
 }
 
-div.list-item {
-    height: var(--item-height-small);
-    border-radius: var(--border-radius-small);
+input::placeholder {
+    color: var(--f-high);
+    opacity: 0.5;
+}
+
+form:hover input,
+form.full input {
+    display: unset;
 }
 
 input:hover,
 input:focus {
-    background-color: var(--b-med);
+    height: var(--item-height);
 }
 
-input::placeholder {
-    color: var(--f-low);
-    transition: color var(--transition);
-}
-
-input:hover::placeholder {
-    color: var(--f-high);
+.dummy-form {
+    width: 100%;
+    height: var(--item-height-small);
+    background-color: var(--b-low);
+    border-radius: var(--border-radius-small);
 }
 
 .dummy-item {

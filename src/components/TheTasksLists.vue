@@ -15,11 +15,21 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import TasksList from './TasksList.vue'
+import { useConfigStore } from '@/stores/configStore'
 import TheListsMenu from './TheListsMenu.vue'
 
 const currentList = ref('today')
+const config = useConfigStore()
+
+onMounted(() => {
+    window.addEventListener('keyup', event => {
+        if (event.code === 'Escape' && config.edit) {
+            config.edit = false
+        }
+    })
+})
 </script>
 
 <style scoped>

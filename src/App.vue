@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import TheTasksLists from './components/TheTasksLists.vue';
+import TheTasksLists from './components/TheTasksLists.vue'
 
 export default {
     name: 'App',
@@ -31,5 +31,4 @@ h1 {
     font-weight: lighter;
     line-height: 60px;
 }
-
 </style>

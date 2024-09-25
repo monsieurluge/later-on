@@ -12,6 +12,9 @@
     /* sizes */
     --header-height: 60px;
     --item-height: 40px;
+    --item-height-small: 12px;
+    --border-radius: 5px;
+    --border-radius-small: 3px;
     /* config */
     --transition: 0.3s;
 }

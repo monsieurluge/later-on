@@ -72,6 +72,7 @@ li:hover {
 .name {
     width: 100%;
     padding: 0 10px;
+    color: var(--f-high);
     font-size: 1em;
     font-family: monospace, sans;
     overflow-x: hidden;

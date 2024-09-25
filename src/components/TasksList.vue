@@ -32,7 +32,7 @@ defineProps(['listName'])
 
 const config = useConfigStore()
 const dropTarget = ref(null)
-const isFormDropTarget = ref(false);
+const isFormDropTarget = ref(false)
 const store = useTasksStore()
 
 const isDraggable = computed(() => {

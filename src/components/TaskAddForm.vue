@@ -5,12 +5,7 @@
         @drop="onDrop"
         @submit.prevent="onSubmit"
     >
-        <input
-            type="text"
-            placeholder="+ add a task"
-            v-model="name"
-            @blur="name = ''"
-        />
+        <input type="text" placeholder="+ add a task" v-model="name" @blur="name = ''" />
         <div v-if="isDropTarget" class="dummy-item"></div>
     </form>
 </template>

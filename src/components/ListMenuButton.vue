@@ -5,7 +5,9 @@
         @dragleave="isDropTarget = false"
         @dragover.prevent="isDropTarget = !active"
         @drop="onDrop($event)"
-    >{{ label }}</button>
+    >
+        {{ label }}
+    </button>
 </template>
 
 <script setup>

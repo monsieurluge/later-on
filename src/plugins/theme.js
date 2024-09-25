@@ -3,11 +3,11 @@ import { themes } from './themes'
 export function createTheme({ dark = 'sandstorm', light = 'tape' } = {}) {
     const applyColor = ([property, hex]) => document.documentElement.style.setProperty(property, hex)
 
-    const applyTheme = (themeName) => getColorsTuples(themeName).forEach(applyColor)
+    const applyTheme = themeName => getColorsTuples(themeName).forEach(applyColor)
 
-    const toColorVariable = (key) => `--${key.replace('_', '-')}`
+    const toColorVariable = key => `--${key.replace('_', '-')}`
 
-    const getColorsTuples = (themeName) => {
+    const getColorsTuples = themeName => {
         if (!themes[themeName]) themeName = 'marble'
         return Object.entries(themes[themeName]).map(([key, value]) => [toColorVariable(key), value])
     }
@@ -16,7 +16,7 @@ export function createTheme({ dark = 'sandstorm', light = 'tape' } = {}) {
 
     const theme = {
         install: () => {
-            mediaMatcher.addEventListener('change', (event) => applyTheme(event.matches ? light : dark))
+            mediaMatcher.addEventListener('change', event => applyTheme(event.matches ? light : dark))
             applyTheme(mediaMatcher.matches ? light : dark)
         },
     }

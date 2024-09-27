@@ -1,81 +1,59 @@
 <template>
     <button
-        :class="classObject"
-        @dragend="onDragEnd"
+        :class="{ dropTarget: isDropTarget }"
+        @dragend="isDropTarget = false"
         @dragleave="isDropTarget = false"
-        @dragover.prevent="isDropTarget = !active"
-        @drop="onDrop($event)"
+        @dragover.prevent="isDropTarget = true"
+        @drop="isDropTarget = false"
     >
-        {{ label }}
+        <span class="label">{{ label }}</span><span class="arrow">&rarr;</span>
     </button>
 </template>
 
 <script setup>
-import { computed, defineProps, ref } from 'vue'
-import { useTasksStore } from '@/stores/tasksStore'
+import { defineProps, ref } from 'vue'
 
-const props = defineProps(['active', 'label', 'left', 'right'])
+defineProps(['label'])
 
 const isDropTarget = ref(false)
-
-const classObject = computed(() => {
-    return {
-        active: props.active,
-        left: !!props.left,
-        right: !!props.right,
-        target: isDropTarget.value,
-    }
-})
-
-const tasks = useTasksStore()
-
-function onDrop(event) {
-    isDropTarget.value = false
-    if (props.active) return
-    tasks.moveTo({
-        list: props.label,
-        name: event.dataTransfer.getData('taskName'),
-    })
-}
 </script>
 
 <style scoped>
 button {
-    flex: 1;
+    position: relative;
     padding: 10px;
-    color: var(--f-low);
+    color: var(--f-high);
     font-family: monospace, sans;
     font-size: 1rem;
-    text-align: center;
+    text-align: left;
     border: none;
-    border-radius: 0;
     background-color: var(--b-low);
     cursor: default;
-    transition:
-        color var(--transition),
-        background-color var(--transition);
+    overflow: hidden;
+    transition: background-color var(--transition);
 }
 
-button:not(.active):hover,
-button.target {
-    color: var(--f-high);
+button:hover,
+button.dropTarget {
     background-color: var(--b-med);
 }
 
-button.active {
-    color: var(--f-high);
+.arrow {
+    position: absolute;
+    left: 100%;
+    color: var(--b-low);
+    transition:
+        color var(--transition),
+        transform var(--transition);
+}
+
+.label {
     font-weight: bold;
 }
 
-.left {
-    text-align: left;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-}
-
-.right {
-    text-align: right;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+button:hover .arrow,
+button.dropTarget .arrow {
+    transform: translateX(-20px);
+    color: var(--f-high);
 }
 </style>

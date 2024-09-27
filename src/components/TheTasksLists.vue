@@ -5,8 +5,8 @@
             :current="currentList"
             @dropped-on-today="currentList = 'today'"
             @dropped-on-tomorrow="currentList = 'tomorrow'"
-            @today-clicked="currentList = 'today'"
-            @tomorrow-clicked="currentList = 'tomorrow'"
+            @today-clicked="currentList = 'tomorrow'"
+            @tomorrow-clicked="currentList = 'today'"
         />
         <TasksList list-name="today" v-show="currentList === 'today'" />
         <TasksList list-name="tomorrow" v-show="currentList === 'tomorrow'" />

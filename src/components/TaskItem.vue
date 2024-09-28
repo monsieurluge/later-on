@@ -14,7 +14,7 @@
             <button class="dimmed" @click.prevent.stop="$emit('removeButtonClicked')">del</button>
         </template>
         <template v-else>
-            <span class="name">{{ name }}</span>
+            <span class="name" :title="name">{{ name }}</span>
             <button :class="{ dimmed: size === 'size' }" @click.prevent.stop="$emit('sizeButtonClicked')">{{ size }}</button>
         </template>
     </li>
@@ -61,7 +61,6 @@ li {
     border-radius: 5px;
     cursor: pointer;
     box-sizing: border-box;
-    overflow: hidden;
     transition: background-color 0.3s;
 }
 

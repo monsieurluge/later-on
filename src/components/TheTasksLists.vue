@@ -34,7 +34,7 @@ onMounted(() => {
 
 <style scoped>
 .tasks-lists {
-    width: 400px;
+    width: var(--tasks-list-width);
     height: calc(100% - var(--header-height));
     margin: 0 auto;
     display: flex;

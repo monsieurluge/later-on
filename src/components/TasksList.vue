@@ -12,7 +12,6 @@
                     @dragover.prevent="onDragOver(task.name)"
                     @dragstart="onDragStart($event, task.name)"
                     @drop="onDrop"
-                    @removeButtonClicked="onRemoveButtonClicked(task.name)"
                     @sizeButtonClicked="onSizeButtonClicked(task.name)"
                 />
                 <div v-if="task.name === dropTarget" class="dummy-item"></div>
@@ -55,10 +54,6 @@ function onDrop(event) {
     store.moveAfter(event.dataTransfer.getData('taskName'), dropTarget.value)
     dropTarget.value = null
     isFormDropTarget.value = false
-}
-
-function onRemoveButtonClicked(name) {
-    store.remove(name)
 }
 
 function onSizeButtonClicked(name) {

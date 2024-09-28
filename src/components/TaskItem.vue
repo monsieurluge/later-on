@@ -11,7 +11,6 @@
                 @blur="submit"
                 @keyup.enter="submit"
             />
-            <button class="dimmed" @click.prevent.stop="$emit('removeButtonClicked')">del</button>
         </template>
         <template v-else>
             <span class="name" :title="name">{{ name }}</span>

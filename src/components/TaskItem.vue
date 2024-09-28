@@ -59,7 +59,6 @@ li {
     background-color: var(--b-low);
     border: none;
     border-radius: 5px;
-    cursor: pointer;
     box-sizing: border-box;
     transition: background-color 0.3s;
 }
@@ -103,7 +102,6 @@ button {
     background-color: var(--b-low);
     border: none;
     border-radius: 5px;
-    cursor: pointer;
     box-sizing: border-box;
     transition:
         background-color 0.3s,

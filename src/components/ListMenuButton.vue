@@ -28,7 +28,6 @@ button {
     text-align: left;
     border: none;
     background-color: var(--b-low);
-    cursor: default;
     overflow: hidden;
     transition: background-color var(--transition);
 }

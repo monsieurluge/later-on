@@ -4,8 +4,8 @@
         v-else
         :class="{ full: isInputFocused }"
         @dragleave="isDropTarget = false"
-        @dragover.prevent="isDropTarget = true"
-        @drop="onDrop"
+        @dragover.prevent="onDragOver"
+        @drop.prevent="onDrop"
         @submit.prevent="onSubmit"
     >
         <input
@@ -16,12 +16,13 @@
             @focusin="isInputFocused = true"
             @input.prevent
         />
-        <div v-if="isDropTarget" class="dummy-item"></div>
     </form>
+    <div v-if="isDropTarget" class="dummy-item"></div>
 </template>
 
 <script setup>
 import { defineProps, ref } from 'vue'
+import { isStringDragEvent } from '@/common/dragAndDrop'
 import { useConfigStore } from '@/stores/configStore'
 import { useTasksStore } from '@/stores/tasksStore'
 
@@ -32,7 +33,13 @@ const name = ref('')
 const props = defineProps(['listName'])
 const tasks = useTasksStore()
 
+function onDragOver(event) {
+    if (!isStringDragEvent(event)) return
+    isDropTarget.value = true
+}
+
 function onDrop(event) {
+    if (!event.dataTransfer.getData('taskName')) return
     tasks.moveOnTop(event.dataTransfer.getData('taskName'))
     isDropTarget.value = false
 }

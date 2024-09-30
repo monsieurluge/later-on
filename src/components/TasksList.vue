@@ -10,9 +10,9 @@
                     :draggable="isDraggable"
                     :editable="config.edit"
                     @dragleave="onDragLeave"
-                    @dragover.prevent="onDragOver(task.name)"
+                    @dragover.prevent="onDragOver($event, task.name)"
                     @dragstart="onDragStart($event, task.name)"
-                    @drop="onDrop"
+                    @drop.prevent="onDrop"
                 />
                 <div v-if="task.name === dropTarget" class="dummy-item"></div>
             </template>
@@ -22,6 +22,7 @@
 
 <script setup>
 import { computed, defineProps, ref } from 'vue'
+import { isStringDragEvent } from '@/common/dragAndDrop'
 import { useConfigStore } from '@/stores/configStore'
 import { useTasksStore } from '@/stores/tasksStore'
 import TaskAddForm from './TaskAddForm'
@@ -39,9 +40,7 @@ const isDraggable = computed(() => {
 })
 
 const currentTaskName = computed(() => {
-    const workingOn = store.tasks
-        .filter(({ list }) => list === 'today')
-        .find(({ done }) => !done)
+    const workingOn = store.tasks.filter(({ list }) => list === 'today').find(({ done }) => !done)
     return workingOn ? workingOn.name : ''
 })
 
@@ -49,7 +48,8 @@ function onDragLeave() {
     dropTarget.value = null
 }
 
-function onDragOver(name) {
+function onDragOver(event, name) {
+    if (!isStringDragEvent(event)) return
     dropTarget.value = name
 }
 
@@ -58,7 +58,7 @@ function onDragStart(event, name) {
 }
 
 function onDrop(event) {
-    store.moveAfter(event.dataTransfer.getData('taskName'), dropTarget.value)
+    if (event.dataTransfer.getData('taskName')) store.moveAfter(event.dataTransfer.getData('taskName'), dropTarget.value)
     dropTarget.value = null
     isFormDropTarget.value = false
 }

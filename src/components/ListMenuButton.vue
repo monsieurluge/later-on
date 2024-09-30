@@ -3,8 +3,8 @@
         :class="{ dropTarget: isDropTarget }"
         @dragend="isDropTarget = false"
         @dragleave="isDropTarget = false"
-        @dragover.prevent="isDropTarget = true"
-        @drop="isDropTarget = false"
+        @dragover.prevent="onDragOver"
+        @drop.prevent="isDropTarget = false"
     >
         <span class="label">{{ label }}</span><span class="arrow">&rarr;</span>
     </button>
@@ -12,10 +12,16 @@
 
 <script setup>
 import { defineProps, ref } from 'vue'
+import { isStringDragEvent } from '@/common/dragAndDrop'
 
 defineProps(['label'])
 
 const isDropTarget = ref(false)
+
+function onDragOver(event) {
+    if (!isStringDragEvent(event)) return
+    isDropTarget.value = true
+}
 </script>
 
 <style scoped>

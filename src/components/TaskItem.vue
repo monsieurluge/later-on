@@ -14,7 +14,12 @@
         </template>
         <template v-else>
             <span class="name" :title="name">{{ name }}</span>
-            <button :class="{ dimmed: size === 'size' }" @click.prevent.stop="$emit('sizeButtonClicked')">{{ size }}</button>
+            <button :title="size" @click.prevent.stop="changeSize">
+                <template v-if="size === 'none'"><span class="empty all-empty">▫▫▫</span></template>
+                <template v-if="size === 'small'"><span class="empty">▫▫</span>▪</template>
+                <template v-if="size === 'medium'"><span class="empty">▫</span>▪▪</template>
+                <template v-if="size === 'large'">▪▪▪</template>
+            </button>
         </template>
     </li>
 </template>
@@ -27,6 +32,10 @@ const props = defineProps(['done', 'editable', 'name', 'size'])
 
 const newName = ref('')
 const tasks = useTasksStore()
+
+function changeSize() {
+    tasks.changeSize(props.name)
+}
 
 function submit() {
     if (newName.value.length === 0) {
@@ -53,8 +62,6 @@ li {
     display: flex;
     align-items: center;
     flex-direction: row;
-    gap: 10px;
-    justify-content: space-between;
     background-color: var(--b-low);
     border: none;
     border-radius: 5px;
@@ -78,15 +85,14 @@ li:hover {
 }
 
 input.name {
-    width: 100%;
     height: 100%;
     border: none;
     background-color: transparent;
 }
 
 input.error {
-    color: white;
-    background-color: crimson;
+    color: var(--f-inv);
+    background-color: var(--b-inv);
 }
 
 .done:not(.editable) .name {
@@ -94,29 +100,44 @@ input.error {
 }
 
 button {
-    margin-right: 10px;
+    height: 100%;
+    padding: 3px;
     color: var(--f-low);
     font-family: monospace, sans;
-    font-size: 0.8em;
+    text-orientation: sideways;
+    writing-mode: vertical-lr;
     background-color: var(--b-low);
     border: none;
-    border-radius: 5px;
+    border-left: 1px solid var(--b-low);
+    border-radius: 0 5px 5px 0;
     box-sizing: border-box;
     transition:
-        background-color 0.3s,
-        color 0.3s;
+        background-color var(--transition),
+        color var(--transition);
 }
 
-button.dimmed {
-    color: var(--b-low);
+.empty {
+    color: var(--f-low);
+    transition: color var(--transition);
 }
 
-li:hover button.dimmed {
+.all-empty {
+    color: transparent;
+}
+
+li:hover button {
+    background-color: var(--b-med);
+}
+
+button:hover {
+    color: var(--f-high);
+}
+
+li:hover .all-empty {
     color: var(--f-low);
 }
 
-button:hover,
-li:hover button:hover {
+button:hover .all-empty {
     color: var(--f-high);
 }
 </style>

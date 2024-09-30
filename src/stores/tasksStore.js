@@ -22,14 +22,13 @@ export const useTasksStore = defineStore('tasks', () => {
             lastUpdated: Date.now(),
             list,
             name: trimmedName,
-            size: 'size',
+            size: 'none',
         })
     }
 
     function changeSize(name) {
         const task = tasks.value.find(task => task.name === name)
         if (!task) return
-        if (!taskSizes.has(task.size)) return
         task.size = taskSizes.get(task.size).next
         task.lastUpdated = Date.now()
     }

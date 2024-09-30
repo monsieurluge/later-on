@@ -1,5 +1,5 @@
 <template>
-    <li :class="{ done, editable }" @click="onTaskClicked">
+    <li :class="{ done, editable, working }" @click="onTaskClicked">
         <template v-if="editable">
             <input
                 class="name"
@@ -28,7 +28,7 @@
 import { defineProps, ref } from 'vue'
 import { useTasksStore } from '@/stores/tasksStore'
 
-const props = defineProps(['done', 'editable', 'name', 'size'])
+const props = defineProps(['done', 'editable', 'name', 'size', 'working'])
 
 const newName = ref('')
 const tasks = useTasksStore()
@@ -59,6 +59,7 @@ function onTaskClicked() {
 li {
     width: 100%;
     height: var(--item-height);
+    position: relative;
     display: flex;
     align-items: center;
     flex-direction: row;
@@ -71,6 +72,16 @@ li {
 
 li:hover {
     background-color: var(--b-med);
+}
+
+li.working::before {
+    content: '●';
+    position: absolute;
+    top: 0;
+    left: 3px;
+    color: var(--f-med);
+    font-size: 16px;
+    line-height: 16px;
 }
 
 .name {

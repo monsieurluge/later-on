@@ -6,6 +6,7 @@
                 <TaskItem
                     class="task-item"
                     v-bind="task"
+                    :working="currentTaskName === task.name"
                     :draggable="isDraggable"
                     :editable="config.edit"
                     @dragleave="onDragLeave"
@@ -35,6 +36,13 @@ const store = useTasksStore()
 
 const isDraggable = computed(() => {
     return !config.edit
+})
+
+const currentTaskName = computed(() => {
+    const workingOn = store.tasks
+        .filter(({ list }) => list === 'today')
+        .find(({ done }) => !done)
+    return workingOn ? workingOn.name : ''
 })
 
 function onDragLeave() {

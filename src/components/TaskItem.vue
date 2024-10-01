@@ -71,17 +71,22 @@ li {
 }
 
 li:hover {
-    background-color: var(--b-med);
+    background-color: var(--b-low-alt);
 }
 
-li.working::before {
-    content: '●';
+li:not(.editable).working::before {
+    content: '';
+    width: 8px;
+    height: 8px;
     position: absolute;
-    top: 0;
-    left: 3px;
-    color: var(--f-med);
-    font-size: 16px;
-    line-height: 16px;
+    top: -1px;
+    left: -1px;
+    background-color: var(--f-med);
+    border-top: 3px solid var(--background);
+    border-left: 3px solid var(--background);
+    border-right: 1px solid var(--background);
+    border-bottom: 1px solid var(--background);
+    border-radius: 50% 0 0 0;
 }
 
 .name {
@@ -117,14 +122,18 @@ button {
     font-family: monospace, sans;
     text-orientation: sideways;
     writing-mode: vertical-lr;
-    background-color: var(--b-low);
+    background-color: transparent;
     border: none;
-    border-left: 1px solid var(--b-low);
+    border-left: 1px solid transparent;
     border-radius: 0 5px 5px 0;
     box-sizing: border-box;
     transition:
         background-color var(--transition),
         color var(--transition);
+}
+
+li:hover button {
+    border-color: var(--background);
 }
 
 .empty {
@@ -136,12 +145,8 @@ button {
     color: transparent;
 }
 
-li:hover button {
-    background-color: var(--b-med);
-}
-
 button:hover {
-    color: var(--f-high);
+    color: var(--f-med);
 }
 
 li:hover .all-empty {
@@ -149,6 +154,6 @@ li:hover .all-empty {
 }
 
 button:hover .all-empty {
-    color: var(--f-high);
+    color: var(--f-med);
 }
 </style>

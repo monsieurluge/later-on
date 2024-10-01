@@ -60,7 +60,7 @@ form {
     width: 100%;
     min-height: var(--item-height-small);
     max-height: var(--item-height-small);
-    background-color: var(--b-low);
+    background-color: var(--b-med);
     border-radius: var(--border-radius-small);
     overflow: hidden;
     transition:
@@ -74,7 +74,7 @@ form:hover,
 form.full {
     min-height: var(--item-height);
     max-height: var(--item-height);
-    background-color: var(--b-med);
+    background-color: var(--b-med-alt);
     border-radius: var(--border-radius);
 }
 

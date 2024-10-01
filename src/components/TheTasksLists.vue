@@ -43,7 +43,7 @@ onMounted(() => {
 
 .separator {
     --dot-bg: var(--background);
-    --dot-color: var(--f-low);
+    --dot-color: var(--b-low);
     --dot-size: 2px;
     --dot-space: 10px;
     background-color: var(--background);

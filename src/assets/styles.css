@@ -9,6 +9,10 @@
     --b-med: #ffffff;
     --b-low: #f5f5f5;
     --b-inv: #000000;
+    /* backgrounds variations */
+    --b-high-alt: color-mix(in srgb, var(--b-high), var(--f-high) 8%);
+    --b-med-alt: color-mix(in srgb, var(--b-med), var(--f-high) 8%);
+    --b-low-alt: color-mix(in srgb, var(--b-low), var(--f-high) 8%);
     /* sizes */
     --border-radius-small: 3px;
     --border-radius: 5px;

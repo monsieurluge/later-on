@@ -40,7 +40,7 @@ button {
 
 button:hover,
 button.dropTarget {
-    background-color: var(--b-med);
+    background-color: var(--b-low-alt);
 }
 
 .arrow {

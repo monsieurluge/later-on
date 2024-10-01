@@ -43,7 +43,7 @@ button {
 button:hover,
 button.target {
     color: var(--f-high);
-    background-color: var(--b-med);
+    background-color: var(--b-low-alt);
 }
 
 button.active {

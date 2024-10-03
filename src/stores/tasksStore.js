@@ -47,12 +47,14 @@ export const useTasksStore = defineStore('tasks', () => {
         task.lastUpdated = Date.now()
     }
 
-    function moveOnTop(name) {
+    function moveBefore(name, target) {
+        if (name === target) return
         const task = tasks.value.find(task => task.name === name)
-        task.lastUpdated = Date.now()
         const index = tasks.value.indexOf(task)
         tasks.value.splice(index, 1)
-        tasks.value.unshift(task)
+        const position = tasks.value.findIndex(task => task.name === target)
+        tasks.value.splice(position, 0, task)
+        task.lastUpdated = Date.now()
     }
 
     function moveTo({ name, list }) {
@@ -95,7 +97,7 @@ export const useTasksStore = defineStore('tasks', () => {
         changeSize,
         from,
         moveAfter,
-        moveOnTop,
+        moveBefore,
         moveTo,
         rename,
         remove,

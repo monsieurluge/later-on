@@ -1,13 +1,6 @@
 <template>
     <div v-if="config.edit" class="dummy-form"></div>
-    <form
-        v-else
-        :class="{ full: isInputFocused }"
-        @dragleave="isDropTarget = false"
-        @dragover.prevent="onDragOver"
-        @drop.prevent="onDrop"
-        @submit.prevent="onSubmit"
-    >
+    <form v-else :class="{ full: isInputFocused }" @submit.prevent="onSubmit">
         <input
             placeholder="+ add a task"
             type="text"
@@ -17,32 +10,18 @@
             @input.prevent
         />
     </form>
-    <div v-if="isDropTarget" class="dummy-item"></div>
 </template>
 
 <script setup>
 import { defineProps, ref } from 'vue'
-import { isStringDragEvent } from '@/common/dragAndDrop'
 import { useConfigStore } from '@/stores/configStore'
 import { useTasksStore } from '@/stores/tasksStore'
 
 const config = useConfigStore()
 const isInputFocused = ref(false)
-const isDropTarget = ref(false)
 const name = ref('')
 const props = defineProps(['listName'])
 const tasks = useTasksStore()
-
-function onDragOver(event) {
-    if (!isStringDragEvent(event)) return
-    isDropTarget.value = true
-}
-
-function onDrop(event) {
-    if (!event.dataTransfer.getData('taskName')) return
-    tasks.moveOnTop(event.dataTransfer.getData('taskName'))
-    isDropTarget.value = false
-}
 
 function onSubmit() {
     tasks.add({ name: name.value, list: props.listName })
@@ -110,14 +89,7 @@ input:focus {
 .dummy-form {
     width: 100%;
     height: var(--item-height-small);
-    background-color: var(--b-low);
-    border-radius: var(--border-radius-small);
-}
-
-.dummy-item {
-    height: 3px;
-    margin-top: 3px;
     background-color: var(--b-med);
-    border-radius: 1px;
+    border-radius: var(--border-radius-small);
 }
 </style>

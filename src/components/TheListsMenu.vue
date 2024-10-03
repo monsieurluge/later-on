@@ -5,13 +5,17 @@
             label="today"
             v-show="current === 'today'"
             @click="$emit('today-clicked')"
-            @drop="onDrop($event, 'tomorrow')"
+            @dragenter.prevent.stop
+            @dragover.prevent.stop
+            @drop.prevent="onDrop($event, 'tomorrow')"
         />
         <ListMenuButton
             class="menu-button"
             label="tomorrow"
             v-show="current === 'tomorrow'"
             @click="$emit('tomorrow-clicked')"
+            @dragenter.prevent.stop
+            @dragover.prevent.stop
             @drop="onDrop($event, 'today')"
         />
         <ListMenuEditButton

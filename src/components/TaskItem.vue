@@ -1,36 +1,46 @@
 <template>
-    <li :class="{ done, editable, working }" @click="onTaskClicked">
-        <template v-if="editable">
-            <input
-                class="name"
-                type="text"
-                placeholder="remove the task ?"
-                :value="name"
-                @focusin="onNameChange"
-                @input="onNameChange"
-                @blur="submit"
-                @keyup.enter="submit"
-            />
-        </template>
-        <template v-else>
-            <span class="name" :title="name">{{ name }}</span>
-            <button :title="size" @click.prevent.stop="changeSize">
-                <template v-if="size === 'none'"><span class="empty all-empty">▫▫▫</span></template>
-                <template v-if="size === 'small'"><span class="empty">▫▫</span>▪</template>
-                <template v-if="size === 'medium'"><span class="empty">▫</span>▪▪</template>
-                <template v-if="size === 'large'">▪▪▪</template>
-            </button>
-        </template>
+    <li v-if="config.edit">
+        <input
+            class="name"
+            placeholder="remove the task ?"
+            type="text"
+            :value="name"
+            @blur="submit"
+            @focusin="onNameChange"
+            @input="onNameChange"
+            @keyup.enter="submit"
+        />
+    </li>
+    <li
+        v-else
+        draggable="true"
+        :class="{ done, working, isDragged }"
+        @click="toggleCompletion"
+        @dragend="onDragEnd"
+        @dragover.prevent.stop="onDragOver"
+        @dragstart="onDragStart"
+    >
+        <span class="name" :title="name">{{ name }}</span>
+        <button :title="size" @click.prevent.stop="changeSize">
+            <template v-if="size === 'none'"><span class="empty all-empty">▫▫▫</span></template>
+            <template v-if="size === 'small'"><span class="empty">▫▫</span>▪</template>
+            <template v-if="size === 'medium'"><span class="empty">▫</span>▪▪</template>
+            <template v-if="size === 'large'">▪▪▪</template>
+        </button>
     </li>
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue'
+import { defineEmits, defineProps, ref } from 'vue'
+import { useConfigStore } from '@/stores/configStore'
 import { useTasksStore } from '@/stores/tasksStore'
+import { isStringDragEvent } from '@/common/dragAndDrop'
 
-const props = defineProps(['done', 'editable', 'name', 'size', 'working'])
-
+const config = useConfigStore()
+const emit = defineEmits(['dragOverBottom', 'dragOverTop'])
+const isDragged = ref(false)
 const newName = ref('')
+const props = defineProps(['done', 'name', 'size', 'working'])
 const tasks = useTasksStore()
 
 function changeSize() {
@@ -45,12 +55,33 @@ function submit() {
     tasks.rename({ oldName: props.name, newName: newName.value })
 }
 
+function onDragOver(event) {
+    if (!isStringDragEvent(event)) return
+    const targetRect = event.target.getBoundingClientRect()
+    const pos = event.clientY - targetRect.top
+    pos < targetRect.height / 2
+        ? emit('dragOverTop', props.name)
+        : emit('dragOverBottom', props.name)
+}
+
+function onDragStart(event) {
+    event.dataTransfer.effectAllowed = 'move'
+    event.dataTransfer.dropEffect = 'move'
+    event.dataTransfer.setData('taskName', props.name)
+    setTimeout(() => {
+        isDragged.value = true
+    }, 10)
+}
+
+function onDragEnd() {
+    isDragged.value = false
+}
+
 function onNameChange(event) {
     newName.value = event.target.value
 }
 
-function onTaskClicked() {
-    if (props.editable) return
+function toggleCompletion() {
     tasks.toggleCompletion(props.name)
 }
 </script>
@@ -70,11 +101,19 @@ li {
     transition: background-color 0.3s;
 }
 
+li.isDragged {
+    display: none;
+}
+
+li:not(:last-child) {
+    margin-bottom: 3px;
+}
+
 li:hover {
     background-color: var(--b-low-alt);
 }
 
-li:not(.editable).working::before {
+li.working::before {
     content: '';
     width: 8px;
     height: 8px;
@@ -111,7 +150,7 @@ input.error {
     background-color: var(--b-inv);
 }
 
-.done:not(.editable) .name {
+.done .name {
     text-decoration: line-through;
 }
 

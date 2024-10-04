@@ -115,17 +115,14 @@ li:hover {
 
 li.working::before {
     content: '';
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     position: absolute;
-    top: -1px;
-    left: -1px;
+    top: -2px;
+    left: -2px;
     background-color: var(--f-med);
-    border-top: 3px solid var(--background);
-    border-left: 3px solid var(--background);
-    border-right: 1px solid var(--background);
-    border-bottom: 1px solid var(--background);
-    border-radius: 50% 0 0 0;
+    border: 2px solid var(--background);
+    border-radius: 50%;
 }
 
 .name {

@@ -8,7 +8,7 @@
             @blur="submit"
             @focusin="onNameChange"
             @input="onNameChange"
-            @keyup.enter="submit"
+            @keyup.enter="submitAndQuit"
         />
     </li>
     <li
@@ -55,6 +55,11 @@ function submit() {
         return
     }
     tasks.rename({ oldName: props.name, newName: newName.value })
+}
+
+function submitAndQuit() {
+    submit()
+    config.edit = false
 }
 
 function onDragOver(event) {

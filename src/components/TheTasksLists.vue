@@ -1,5 +1,5 @@
 <template>
-    <section class="tasks-lists">
+    <section class="tasks-lists" @dragover.prevent.stop="onDragover">
         <div class="separator top-separator"></div>
         <TheListsMenu
             :current="currentList"
@@ -18,10 +18,12 @@
 import { onMounted, ref } from 'vue'
 import TasksList from './TasksList.vue'
 import { useConfigStore } from '@/stores/configStore'
+import { useDragDropStore } from '@/stores/dragDropStore'
 import TheListsMenu from './TheListsMenu.vue'
 
 const currentList = ref('today')
 const config = useConfigStore()
+const dragDrop = useDragDropStore()
 
 onMounted(() => {
     window.addEventListener('keyup', event => {
@@ -30,6 +32,10 @@ onMounted(() => {
         }
     })
 })
+
+function onDragover() {
+    dragDrop.lastDropTarget = 'tasks-lists'
+}
 </script>
 
 <style scoped>

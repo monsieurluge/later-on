@@ -33,10 +33,12 @@
 <script setup>
 import { defineEmits, defineProps, ref } from 'vue'
 import { useConfigStore } from '@/stores/configStore'
+import { useDragDropStore } from '@/stores/dragDropStore';
 import { useTasksStore } from '@/stores/tasksStore'
 import { isStringDragEvent } from '@/common/dragAndDrop'
 
 const config = useConfigStore()
+const dragDrop = useDragDropStore()
 const emit = defineEmits(['dragOverBottom', 'dragOverTop'])
 const isDragged = ref(false)
 const newName = ref('')
@@ -57,6 +59,7 @@ function submit() {
 
 function onDragOver(event) {
     if (!isStringDragEvent(event)) return
+    dragDrop.lastDropTarget = 'task'
     const targetRect = event.target.getBoundingClientRect()
     const pos = event.clientY - targetRect.top
     pos < targetRect.height / 2
@@ -167,6 +170,7 @@ button {
     box-sizing: border-box;
     transition:
         background-color var(--transition),
+        border-color var(--transition),
         color var(--transition);
 }
 

@@ -1,19 +1,10 @@
 <template>
     <section class="tasks-list">
         <TaskAddForm :listName="listName" />
-        <ul
-            id="tasks-list"
-            @dragend="onDragEnd"
-            @dragenter.prevent.stop
-            @dragover.prevent.stop
-            @drop.prevent.stop="onDrop"
-        >
-            <li v-if="tasksList.length === 0" class="default-item">take a coffee, then add some tasks</li>
+        <ul @dragend="onDragEnd" @dragenter.prevent.stop @dragover.prevent.stop @drop.prevent.stop="onDrop">
+            <TaskItemDummy v-if="tasksList.length === 0" label="take a coffee, then add some tasks" />
             <template v-for="task in tasksList" :key="task.name">
-                <li
-                    v-if="dropTargetItem.name === task.name && dropTargetItem.position === 'top'"
-                    class="dummy-item"
-                ></li>
+                <TaskItemDummy v-if="dragDrop.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'top'" />
                 <TaskItem
                     :done="task.done"
                     :name="task.name"
@@ -22,10 +13,7 @@
                     @dragOverTop="onDragOverTop"
                     @dragOverBottom="onDragOverBottom"
                 />
-                <li
-                    v-if="dropTargetItem.name === task.name && dropTargetItem.position === 'bottom'"
-                    class="dummy-item"
-                ></li>
+                <TaskItemDummy v-if="dragDrop.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'bottom'" />
             </template>
         </ul>
     </section>
@@ -33,14 +21,17 @@
 
 <script setup>
 import { computed, defineProps, ref } from 'vue'
+import { useDragDropStore } from '@/stores/dragDropStore'
 import { useTasksStore } from '@/stores/tasksStore'
 import TaskAddForm from './TaskAddForm'
 import TaskItem from './TaskItem'
+import TaskItemDummy from  './TaskItemDummy'
 
+const dragDrop = useDragDropStore()
 const fakeDropTargetItem = { name: '', position: 'none' }
+const dropTargetItem = ref(fakeDropTargetItem)
 const props = defineProps(['listName'])
 const tasks = useTasksStore()
-const dropTargetItem = ref(fakeDropTargetItem)
 
 const currentTaskName = computed(() => {
     const workingOn = tasks.tasks.filter(({ list }) => list === 'today').find(({ done }) => !done)
@@ -50,21 +41,6 @@ const currentTaskName = computed(() => {
 const tasksList = computed(() => tasks.from(props.listName))
 
 function onDragEnd() {
-    dropTargetItem.value = fakeDropTargetItem
-}
-
-function onDrop(event) {
-    const task = event.dataTransfer.getData('taskName')
-    if (!task) {
-        dropTargetItem.value = fakeDropTargetItem
-        return
-    }
-    if (dropTargetItem.value.position === 'top') {
-        tasks.moveBefore(event.dataTransfer.getData('taskName'), dropTargetItem.value.name)
-    }
-    if (dropTargetItem.value.position === 'bottom') {
-        tasks.moveAfter(event.dataTransfer.getData('taskName'), dropTargetItem.value.name)
-    }
     dropTargetItem.value = fakeDropTargetItem
 }
 
@@ -81,6 +57,21 @@ function onDragOverTop(name) {
         position: 'top',
     }
 }
+
+function onDrop(event) {
+    const task = event.dataTransfer.getData('taskName')
+    if (!task) {
+        dropTargetItem.value = fakeDropTargetItem
+        return
+    }
+    if (dropTargetItem.value.position === 'top') {
+        tasks.moveBefore(event.dataTransfer.getData('taskName'), dropTargetItem.value.name)
+    }
+    if (dropTargetItem.value.position === 'bottom') {
+        tasks.moveAfter(event.dataTransfer.getData('taskName'), dropTargetItem.value.name)
+    }
+    dropTargetItem.value = fakeDropTargetItem
+}
 </script>
 
 <style scoped>
@@ -89,28 +80,5 @@ ul {
     margin: 3px 0 0 0;
     padding: 0;
     list-style: none;
-}
-
-.default-item {
-    width: 100%;
-    padding: 30px 10px;
-    color: var(--f-high);
-    font-size: 1em;
-    font-family: monospace, sans;
-    background-color: var(--b-low);
-    border: none;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-.dummy-item {
-    margin: 3px 0 0;
-    height: var(--item-height);
-    background-color: var(--b-med);
-    border-radius: var(--border-radius);
-}
-
-.dummy-item:not(:last-child) {
-    margin-bottom: 3px;
 }
 </style>

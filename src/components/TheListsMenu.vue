@@ -6,7 +6,7 @@
             v-show="current === 'today'"
             @click="$emit('today-clicked')"
             @dragenter.prevent.stop
-            @dragover.prevent.stop
+            @dragover.prevent.stop="onDayDragOver"
             @drop.prevent="onDrop($event, 'tomorrow')"
         />
         <ListMenuButton
@@ -15,7 +15,7 @@
             v-show="current === 'tomorrow'"
             @click="$emit('tomorrow-clicked')"
             @dragenter.prevent.stop
-            @dragover.prevent.stop
+            @dragover.prevent.stop="onDayDragOver"
             @drop="onDrop($event, 'today')"
         />
         <ListMenuEditButton
@@ -28,6 +28,7 @@
 <script setup>
 import { defineProps } from 'vue'
 import { useConfigStore } from '@/stores/configStore'
+import { useDragDropStore } from '@/stores/dragDropStore'
 import { useTasksStore } from '@/stores/tasksStore'
 import ListMenuButton from './ListMenuButton'
 import ListMenuEditButton from './ListMenuEditButton'
@@ -35,7 +36,12 @@ import ListMenuEditButton from './ListMenuEditButton'
 defineProps(['current'])
 
 const config = useConfigStore()
+const dragDrop = useDragDropStore()
 const tasks = useTasksStore()
+
+function onDayDragOver() {
+    dragDrop.lastDropTarget = 'day-switcher'
+}
 
 function onDrop(event, toList) {
     tasks.moveTo({

@@ -134,12 +134,14 @@ li.working::before {
     overflow-x: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    cursor: default;
 }
 
 input.name {
     height: 100%;
     border: none;
     background-color: transparent;
+    cursor: text;
 }
 
 input.error {

@@ -6,7 +6,7 @@ import './assets/styles.css'
 
 const app = createApp(App)
 const pinia = createPinia()
-const theme = createTheme()
+const theme = createTheme({ storageKey: 'later-on-theme' })
 
 app.use(pinia)
 app.use(theme)

@@ -19,6 +19,7 @@
             @drop="onDrop($event, 'today')"
         />
         <ListMenuEditButton
+            class="action-button"
             :isActive="config.edit"
             @click="config.edit = !config.edit"
         />
@@ -56,13 +57,24 @@ menu {
     margin: 0 0 3px;
     padding: 0;
     display: flex;
+    align-items: center;
     gap: 1px;
     justify-content: space-between;
     border-radius: var(--border-radius);
+    background-color: var(--b-low);
     overflow: hidden;
+    transition: background-color var(--transition);
+}
+
+menu:hover {
+    background-color: var(--b-low-alt);
 }
 
 .menu-button {
     flex: 1;
+}
+
+.action-button {
+    margin: 0 8px;
 }
 </style>

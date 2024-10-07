@@ -89,7 +89,7 @@ input:focus {
 .dummy-form {
     width: 100%;
     height: var(--item-height-small);
-    background-color: var(--b-med);
+    background-color: var(--b-low);
     border-radius: var(--border-radius-small);
 }
 </style>

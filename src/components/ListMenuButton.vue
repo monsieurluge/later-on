@@ -33,14 +33,8 @@ button {
     font-size: 1rem;
     text-align: left;
     border: none;
-    background-color: var(--b-low);
+    background-color: transparent;
     overflow: hidden;
-    transition: background-color var(--transition);
-}
-
-button:hover,
-button.dropTarget {
-    background-color: var(--b-low-alt);
 }
 
 .arrow {

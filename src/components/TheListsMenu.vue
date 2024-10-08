@@ -20,6 +20,7 @@
         />
         <ListMenuEditButton
             class="action-button"
+            v-if="tasks.from(current).length > 0"
             :isActive="config.edit"
             @click="config.edit = !config.edit"
         />

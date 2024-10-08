@@ -5,8 +5,8 @@
             :current="currentList"
             @dropped-on-today="currentList = 'today'"
             @dropped-on-tomorrow="currentList = 'tomorrow'"
-            @today-clicked="currentList = 'tomorrow'"
-            @tomorrow-clicked="currentList = 'today'"
+            @today-clicked="onTodayClicked"
+            @tomorrow-clicked="onTomorrowClicked"
         />
         <TasksList list-name="today" v-show="currentList === 'today'" />
         <TasksList list-name="tomorrow" v-show="currentList === 'tomorrow'" />
@@ -35,6 +35,16 @@ onMounted(() => {
 
 function onDragover() {
     dragDrop.lastDropTarget = 'tasks-lists'
+}
+
+function onTodayClicked() {
+    currentList.value = 'tomorrow'
+    config.edit = false
+}
+
+function onTomorrowClicked() {
+    currentList.value = 'today'
+    config.edit = false
 }
 </script>
 

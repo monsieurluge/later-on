@@ -1,12 +1,5 @@
 import { themes } from './themes'
 
-const isHexColor = value => /^#([0-9A-F]{3}){1,2}$/i.test(value)
-
-const isSvgFile = ({ name }) => name.slice(name.lastIndexOf('.')) === '.svg'
-
-const isValidColorTuple = ([name, hex]) =>
-    ['b_high', 'b_inv', 'b_low', 'b_med', 'background', 'f_high', 'f_inv', 'f_low', 'f_med'].includes(name) && isHexColor(hex)
-
 const extractColors = svg => {
     return {
         b_high: svg.getElementById('b_high').getAttribute('fill'),
@@ -21,16 +14,52 @@ const extractColors = svg => {
     }
 }
 
-const fakeStorage = { getItem: () => null, setItem: () => {} }
+// algo by: krabs-github (https://gist.github.com/krabs-github)
+// original source: https://gist.github.com/krabs-github/ec56e4f1c12cddf86ae9c551aa9d9e04
+// HSP equation: http://alienryderflex.com/hsp.html
+const isLightColor = hex => {
+    const color = +('0x' + hex.slice(1).replace(hex.length < 5 && /./g, '$&$&'))
+    const blue = color & 255
+    const green = (color >> 8) & 255
+    const red = color >> 16
+    return Math.sqrt(0.299 * Math.pow(red, 2) + 0.587 * Math.pow(green, 2) + 0.114 * Math.pow(blue, 2)) > 127.5
+}
+
+const isSvgFile = ({ name }) => name.slice(name.lastIndexOf('.')) === '.svg'
+
+const isValidColorName = name => ['b_high', 'b_inv', 'b_low', 'b_max', 'b_med', 'background', 'f_high', 'f_inv', 'f_low', 'f_max', 'f_med'].includes(name)
+
+const isValidHexColor = value => /^#([0-9A-F]{3}){1,2}$/i.test(value)
+
+const isValidColorTuple = ([name, hex]) => isValidColorName(name) && isValidHexColor(hex)
 
 const toColorVariable = key => `--${key.replace('_', '-')}`
 
+const withMaxedColors = base => (isLightColor(base.background))
+    ? {...base, 'b_max': '#ffffff', 'f_max': '#000000' }
+    : {...base, 'b_max': '#000000', 'f_max': '#ffffff' }
+
+const fakeStorage = { getItem: () => null, setItem: () => {} }
+
 export function createTheme({ dark = 'sandstorm', light = 'tape', storageKey = 'theme' } = {}) {
     const mediaMatcher = window.matchMedia('(prefers-color-scheme: light)')
+    const reader = new FileReader()
     const storage = localStorage || fakeStorage
 
+    reader.onload = event => {
+        try {
+            const svg = new DOMParser().parseFromString(event.target.result, 'text/xml')
+            const colors = extractColors(svg)
+            applyColors(colors)
+            storeColors({ colors, variant: getCurrentVariant() })
+        } catch (error) {
+            console.warn('invalid SVG theme: ', error)
+        }
+    }
+
     function applyColors(colors) {
-        const colorsTuples = Object.entries(colors)
+        const colorsTuples = Object.entries(withMaxedColors(colors))
+        // eslint-disable-next-line no-unused-vars
         if (!colorsTuples.every(isValidColorTuple)) return
         colorsTuples.forEach(([name, hex]) => document.documentElement.style.setProperty(toColorVariable(name), hex))
     }
@@ -73,17 +102,6 @@ export function createTheme({ dark = 'sandstorm', light = 'tape', storageKey = '
         event.stopPropagation()
         const file = event.dataTransfer.files[0]
         if (!isSvgFile(file)) return
-        const reader = new FileReader()
-        reader.onload = event => {
-            try {
-                const svg = new DOMParser().parseFromString(event.target.result, 'text/xml')
-                const colors = extractColors(svg)
-                applyColors(colors)
-                storeColors({ colors, variant: getCurrentVariant() })
-            } catch (error) {
-                console.warn('invalid SVG theme: ', error)
-            }
-        }
         reader.readAsText(file)
     }
 

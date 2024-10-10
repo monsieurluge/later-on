@@ -1,5 +1,5 @@
 <template>
-    <div v-if="config.edit" class="dummy-form"></div>
+    <div v-if="appState.edit" class="dummy-form"></div>
     <form v-else :class="{ full: isInputFocused }" @submit.prevent="onSubmit">
         <input
             placeholder="+ add a task"
@@ -14,10 +14,10 @@
 
 <script setup>
 import { defineProps, ref } from 'vue'
-import { useConfigStore } from '@/stores/configStore'
+import { useAppStateStore } from '@/stores/appStateStore'
 import { useTasksStore } from '@/stores/tasksStore'
 
-const config = useConfigStore()
+const appState = useAppStateStore()
 const isInputFocused = ref(false)
 const name = ref('')
 const props = defineProps(['listName'])
@@ -53,7 +53,6 @@ form:hover,
 form.full {
     min-height: var(--item-height);
     max-height: var(--item-height);
-    background-color: var(--b-med-alt);
     border-radius: var(--border-radius);
 }
 

@@ -1,5 +1,5 @@
 <template>
-    <li v-if="config.edit">
+    <li v-if="appState.edit">
         <input
             class="name"
             placeholder="remove the task ?"
@@ -14,7 +14,7 @@
     <li
         v-else
         draggable="true"
-        :class="{ done, working, isDragged }"
+        :class="{ done, working, dragged: isDragged }"
         @click="toggleCompletion"
         @dragend="onDragEnd"
         @dragover.prevent.stop="onDragOver"
@@ -32,12 +32,12 @@
 
 <script setup>
 import { defineEmits, defineProps, ref } from 'vue'
-import { useConfigStore } from '@/stores/configStore'
+import { useAppStateStore } from '@/stores/appStateStore'
 import { useDragDropStore } from '@/stores/dragDropStore';
 import { useTasksStore } from '@/stores/tasksStore'
 import { isStringDragEvent } from '@/common/dragAndDrop'
 
-const config = useConfigStore()
+const appState = useAppStateStore()
 const dragDrop = useDragDropStore()
 const emit = defineEmits(['dragOverBottom', 'dragOverTop'])
 const isDragged = ref(false)
@@ -59,7 +59,7 @@ function submit() {
 
 function submitAndQuit() {
     submit()
-    config.edit = false
+    appState.edit = false
 }
 
 function onDragOver(event) {
@@ -109,7 +109,7 @@ li {
     transition: background-color 0.3s;
 }
 
-li.isDragged {
+li.dragged {
     display: none;
 }
 

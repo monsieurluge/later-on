@@ -1,50 +1,33 @@
 <template>
     <section class="tasks-lists" @dragover.prevent.stop="onDragover">
         <div class="separator top-separator"></div>
-        <TheListsMenu
-            :current="currentList"
-            @dropped-on-today="currentList = 'today'"
-            @dropped-on-tomorrow="currentList = 'tomorrow'"
-            @today-clicked="onTodayClicked"
-            @tomorrow-clicked="onTomorrowClicked"
-        />
-        <TasksList list-name="today" v-show="currentList === 'today'" />
-        <TasksList list-name="tomorrow" v-show="currentList === 'tomorrow'" />
+        <TheListsMenu/>
+        <TasksList list-name="today" v-show="appState.list === 'today'" />
+        <TasksList list-name="tomorrow" v-show="appState.list === 'tomorrow'" />
         <div class="separator bottom-separator"></div>
     </section>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import TasksList from './TasksList.vue'
-import { useConfigStore } from '@/stores/configStore'
+import { onMounted } from 'vue'
+import { useAppStateStore } from '@/stores/appStateStore'
 import { useDragDropStore } from '@/stores/dragDropStore'
+import TasksList from './TasksList.vue'
 import TheListsMenu from './TheListsMenu.vue'
 
-const currentList = ref('today')
-const config = useConfigStore()
+const appState = useAppStateStore()
 const dragDrop = useDragDropStore()
 
 onMounted(() => {
     window.addEventListener('keyup', event => {
-        if (event.code === 'Escape' && config.edit) {
-            config.edit = false
+        if (event.code === 'Escape' && appState.edit) {
+            appState.edit = false
         }
     })
 })
 
 function onDragover() {
     dragDrop.lastDropTarget = 'tasks-lists'
-}
-
-function onTodayClicked() {
-    currentList.value = 'tomorrow'
-    config.edit = false
-}
-
-function onTomorrowClicked() {
-    currentList.value = 'today'
-    config.edit = false
 }
 </script>
 

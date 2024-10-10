@@ -1,55 +1,45 @@
 <template>
     <menu>
-        <ListMenuButton
-            class="menu-button"
-            label="today"
-            v-show="current === 'today'"
-            @click="$emit('today-clicked')"
-            @dragenter.prevent.stop
-            @dragover.prevent.stop="onDayDragOver"
-            @drop.prevent="onDrop($event, 'tomorrow')"
+        <ListSwitcherButton
+            :current="appState.list"
+            @click="switchList"
+            @taskDropped="onTaskDropped"
         />
-        <ListMenuButton
-            class="menu-button"
-            label="tomorrow"
-            v-show="current === 'tomorrow'"
-            @click="$emit('tomorrow-clicked')"
-            @dragenter.prevent.stop
-            @dragover.prevent.stop="onDayDragOver"
-            @drop="onDrop($event, 'today')"
-        />
-        <ListMenuEditButton
-            class="action-button"
-            v-if="tasks.from(current).length > 0"
-            :isActive="config.edit"
-            @click="config.edit = !config.edit"
+        <TaskEditButton
+            v-if="hasTasks"
+            :isActive="appState.edit"
+            @click="toggleEdit"
         />
     </menu>
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
-import { useConfigStore } from '@/stores/configStore'
-import { useDragDropStore } from '@/stores/dragDropStore'
+import { computed } from 'vue'
+import { useAppStateStore } from '@/stores/appStateStore'
 import { useTasksStore } from '@/stores/tasksStore'
-import ListMenuButton from './ListMenuButton'
-import ListMenuEditButton from './ListMenuEditButton'
+import ListSwitcherButton from './ListSwitcherButton'
+import TaskEditButton from './TaskEditButton'
 
-defineProps(['current'])
-
-const config = useConfigStore()
-const dragDrop = useDragDropStore()
+const appState = useAppStateStore()
 const tasks = useTasksStore()
 
-function onDayDragOver() {
-    dragDrop.lastDropTarget = 'day-switcher'
+const hasTasks = computed(() => tasks.from(appState.list).length > 0)
+const nextList = computed(() => appState.list === 'today' ? 'tomorrow' : 'today')
+
+function onTaskDropped(name) {
+    tasks.moveTo({
+        list: nextList.value,
+        name: name,
+    })
 }
 
-function onDrop(event, toList) {
-    tasks.moveTo({
-        list: toList,
-        name: event.dataTransfer.getData('taskName'),
-    })
+function switchList() {
+    appState.edit = false
+    appState.list = nextList.value
+}
+
+function toggleEdit() {
+    appState.edit = !appState.edit
 }
 </script>
 
@@ -59,23 +49,10 @@ menu {
     padding: 0;
     display: flex;
     align-items: center;
-    gap: 1px;
     justify-content: space-between;
     border-radius: var(--border-radius);
     background-color: var(--b-low);
     overflow: hidden;
     transition: background-color var(--transition);
-}
-
-menu:hover {
-    background-color: var(--b-low-alt);
-}
-
-.menu-button {
-    flex: 1;
-}
-
-.action-button {
-    margin: 0 8px;
 }
 </style>

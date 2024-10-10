@@ -45,14 +45,14 @@ function toggleEdit() {
 
 <style scoped>
 menu {
+    height: var(--item-height);
     margin: 0 0 3px;
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-radius: var(--border-radius);
     background-color: var(--b-low);
+    border-radius: var(--border-radius);
     overflow: hidden;
-    transition: background-color var(--transition);
 }
 </style>

@@ -7,9 +7,9 @@
             @dragover.prevent.stop
             @drop="onDrop"
         >
-            <TaskItemDummy v-if="tasksList.length === 0" label="take a coffee, then add some tasks" />
+            <FakeTaskItem v-if="tasksList.length === 0" label="take a coffee, then add some tasks" />
             <template v-for="task in tasksList" :key="task.name">
-                <TaskItemDummy v-if="dragDrop.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'top'" />
+                <DummyTaskItem v-if="dragDrop.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'top'" />
                 <TaskItem
                     :done="task.done"
                     :name="task.name"
@@ -18,7 +18,7 @@
                     @dragOverTop="onDragOverTop"
                     @dragOverBottom="onDragOverBottom"
                 />
-                <TaskItemDummy v-if="dragDrop.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'bottom'" />
+                <DummyTaskItem v-if="dragDrop.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'bottom'" />
             </template>
         </ul>
     </section>
@@ -28,9 +28,10 @@
 import { computed, defineProps, ref } from 'vue'
 import { useDragDropStore } from '@/stores/dragDropStore'
 import { useTasksStore } from '@/stores/tasksStore'
+import FakeTaskItem from './FakeTaskItem'
 import TaskAddForm from './TaskAddForm'
 import TaskItem from './TaskItem'
-import TaskItemDummy from  './TaskItemDummy'
+import DummyTaskItem from  './DummyTaskItem'
 
 const dragDrop = useDragDropStore()
 const fakeDropTargetItem = { name: '', position: 'none' }

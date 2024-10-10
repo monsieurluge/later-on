@@ -5,7 +5,9 @@
 <script setup>
     import { defineProps } from 'vue'
 
-    defineProps(['label'])
+    defineProps({
+        label: { type: String, required: true },
+    })
 </script>
 
 <style scoped>
@@ -17,7 +19,7 @@ li {
     font-family: monospace, sans;
     font-size: 1em;
     line-height: var(--item-height);
-    background-color: var(--b-med);
+    background-color: var(--b-low);
     border-radius: var(--border-radius);
 }
 

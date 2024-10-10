@@ -2,7 +2,9 @@
     <header>
         <h1>later on</h1>
     </header>
-    <TheTasksLists />
+    <main>
+        <TheTasksLists />
+    </main>
 </template>
 
 <script>
@@ -30,5 +32,24 @@ h1 {
     font-size: 1.4rem;
     font-weight: lighter;
     line-height: 60px;
+}
+
+main {
+    width: var(--tasks-list-width);
+    height: calc(100% - var(--header-height));
+    margin: 0 auto;
+    padding-top: 80px;
+    box-sizing: border-box;
+
+    --dot-bg: var(--background);
+    --dot-color: var(--b-low);
+    --dot-size: 2px;
+    --dot-space: 10px;
+    background-color: var(--background);
+    background:
+        linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space)
+            var(--dot-space),
+        linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+        var(--dot-color);
 }
 </style>

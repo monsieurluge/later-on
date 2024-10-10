@@ -17,7 +17,7 @@
         :class="{ done, working, dragged: isDragged }"
         @click="toggleCompletion"
         @dragend="onDragEnd"
-        @dragover.prevent.stop="onDragOver"
+        @dragover="onDragOver"
         @dragstart="onDragStart"
     >
         <span class="name" :title="name">{{ name }}</span>
@@ -64,6 +64,8 @@ function submitAndQuit() {
 
 function onDragOver(event) {
     if (!isStringDragEvent(event)) return
+    event.preventDefault()
+    event.stopPropagation()
     dragDrop.lastDropTarget = 'task'
     const targetRect = event.target.getBoundingClientRect()
     const pos = event.clientY - targetRect.top

@@ -1,7 +1,12 @@
 <template>
     <section class="tasks-list">
         <TaskAddForm :listName="listName" />
-        <ul @dragend="onDragEnd" @dragenter.prevent.stop @dragover.prevent.stop @drop.prevent.stop="onDrop">
+        <ul
+            @dragend="onDragEnd"
+            @dragenter.prevent.stop
+            @dragover.prevent.stop
+            @drop="onDrop"
+        >
             <TaskItemDummy v-if="tasksList.length === 0" label="take a coffee, then add some tasks" />
             <template v-for="task in tasksList" :key="task.name">
                 <TaskItemDummy v-if="dragDrop.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'top'" />
@@ -64,6 +69,8 @@ function onDrop(event) {
         dropTargetItem.value = fakeDropTargetItem
         return
     }
+    event.preventDefault()
+    event.stopPropagation()
     if (dropTargetItem.value.position === 'top') {
         tasks.moveBefore(event.dataTransfer.getData('taskName'), dropTargetItem.value.name)
     }

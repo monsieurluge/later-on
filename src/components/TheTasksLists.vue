@@ -1,5 +1,5 @@
 <template>
-    <section class="tasks-lists" @dragover.prevent.stop="onDragover">
+    <section class="tasks-lists" @dragover="onDragover">
         <div class="separator top-separator"></div>
         <TheListsMenu/>
         <TasksList list-name="today" v-show="appState.list === 'today'" />

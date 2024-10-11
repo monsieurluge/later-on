@@ -46,12 +46,14 @@ function onTaskDropped(name) {
 <style scoped>
 #tasks-lists {
     height: 100%;
+    min-height: 100%;
     display: flex;
     flex-direction: row;
 }
 
 .list-wrapper {
     height: 100%;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -73,6 +75,7 @@ function onTaskDropped(name) {
 .separator-top {
     height: 80px;
     margin-bottom: 10px;
+    flex-shrink: 0;
 }
 
 .separator-bottom {

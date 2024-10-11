@@ -1,6 +1,6 @@
 <template>
     <div id="tasks-lists">
-        <DummyTaskDropZone />
+        <TaskDropZone label="◬ remove" @task-dropped="removeTask" />
         <div class="list-wrapper" @dragover.prevent.stop="onListDragOver" @dragenter.prevent.stop>
             <div class="separator separator-top"></div>
             <TheListsMenu />
@@ -8,7 +8,7 @@
             <TasksList list-name="tomorrow" v-show="appState.list === 'tomorrow'" />
             <div class="separator separator-bottom"></div>
         </div>
-        <TaskDropZone :label="appState.nextList === 'today' ? '→ do it today' : '→ later on'" @task-dropped="onTaskDropped" />
+        <TaskDropZone :label="appState.nextList === 'today' ? '→ do it today' : '→ later on'" @task-dropped="moveTask" />
     </div>
 </template>
 
@@ -17,7 +17,6 @@ import { onMounted } from 'vue'
 import { useAppStateStore } from '@/stores/appStateStore'
 import { useDragDropStore } from '@/stores/dragDropStore'
 import { useTasksStore } from '@/stores/tasksStore'
-import DummyTaskDropZone from './DummyTaskDropZone.vue'
 import TaskDropZone from './TaskDropZone'
 import TasksList from './TasksList.vue'
 import TheListsMenu from './TheListsMenu'
@@ -34,12 +33,16 @@ onMounted(() => {
     })
 })
 
+function moveTask(name) {
+    tasks.moveToNextList(name)
+}
+
 function onListDragOver() {
     dragDrop.lastDropTarget = 'tasks-lists'
 }
 
-function onTaskDropped(name) {
-    tasks.moveToNextList(name)
+function removeTask(name) {
+    tasks.remove(name)
 }
 </script>
 

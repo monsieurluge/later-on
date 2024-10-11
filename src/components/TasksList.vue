@@ -84,7 +84,7 @@ function onDrop(event) {
 
 <style scoped>
 ul {
-    width: 100%;
+    width: var(--tasks-list-width);
     margin: 3px 0 0 0;
     padding: 0;
     list-style: none;

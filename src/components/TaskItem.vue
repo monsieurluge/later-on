@@ -78,6 +78,7 @@ function onDragStart(event) {
     event.dataTransfer.effectAllowed = 'move'
     event.dataTransfer.dropEffect = 'move'
     event.dataTransfer.setData('taskName', props.name)
+    dragDrop.isTaskDragging = true
     setTimeout(() => {
         isDragged.value = true
     }, 10)
@@ -85,6 +86,7 @@ function onDragStart(event) {
 
 function onDragEnd() {
     isDragged.value = false
+    dragDrop.isTaskDragging = false
 }
 
 function onNameChange(event) {

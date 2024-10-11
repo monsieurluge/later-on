@@ -19,8 +19,9 @@
     --f-med-alt: color-mix(in srgb, var(--f-med), var(--b-max) 10%);
     --f-low-alt: color-mix(in srgb, var(--f-low), var(--b-max) 10%);
     /* sizes */
-    --border-radius-small: 3px;
     --border-radius: 5px;
+    --border-radius-large: 12px;
+    --border-radius-small: 3px;
     --header-height: 60px;
     --item-height-small: 12px;
     --item-height: 40px;

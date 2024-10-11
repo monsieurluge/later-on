@@ -1,39 +1,13 @@
 <template>
-    <button
-        :class="{ target: isDropTarget }"
-        @click="$emit('click')"
-        @dragend="isDropTarget = false"
-        @dragleave="isDropTarget = false"
-        @dragover="onDragOver"
-        @drop="onDrop"
-    >{{ current }}</button>
+    <button>{{ current }}</button>
 </template>
 
 <script setup>
-import { defineEmits, defineProps, ref } from 'vue'
-import { isStringDragEvent } from '@/common/dragAndDrop'
+import { defineProps } from 'vue'
 
 defineProps({
     current: { type: String, required: true },
 })
-
-const emit = defineEmits(['click', 'taskDropped'])
-const isDropTarget = ref(false)
-
-function onDragOver(event) {
-    if (!isStringDragEvent(event)) return
-    event.preventDefault()
-    event.stopPropagation()
-    isDropTarget.value = true
-}
-
-function onDrop(event) {
-    if (!isStringDragEvent(event)) return
-    event.preventDefault()
-    event.stopPropagation()
-    isDropTarget.value = false
-    emit('taskDropped', event.dataTransfer.getData('taskName'))
-}
 </script>
 
 <style scoped>
@@ -60,10 +34,5 @@ button:hover {
 
 button:active {
     color: var(--f-med);
-}
-
-button.target {
-    color: var(--b-med);
-    background-color: var(--b-med);
 }
 </style>

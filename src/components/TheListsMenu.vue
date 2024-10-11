@@ -1,15 +1,7 @@
 <template>
     <menu>
-        <ListSwitcherButton
-            :current="appState.list"
-            @click="switchList"
-            @taskDropped="onTaskDropped"
-        />
-        <TaskEditButton
-            v-if="hasTasks"
-            :isActive="appState.edit"
-            @click="toggleEdit"
-        />
+        <ListSwitcherButton :current="appState.list" @click="switchList" />
+        <TaskEditButton v-if="hasTasks" :isActive="appState.edit" @click="toggleEdit" />
     </menu>
 </template>
 
@@ -24,18 +16,10 @@ const appState = useAppStateStore()
 const tasks = useTasksStore()
 
 const hasTasks = computed(() => tasks.from(appState.list).length > 0)
-const nextList = computed(() => appState.list === 'today' ? 'tomorrow' : 'today')
-
-function onTaskDropped(name) {
-    tasks.moveTo({
-        list: nextList.value,
-        name: name,
-    })
-}
 
 function switchList() {
     appState.edit = false
-    appState.list = nextList.value
+    appState.list = appState.nextList
 }
 
 function toggleEdit() {

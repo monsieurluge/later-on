@@ -59,7 +59,6 @@ export function createTheme({ dark = 'sandstorm', light = 'tape', storageKey = '
 
     function applyColors(colors) {
         const colorsTuples = Object.entries(withMaxedColors(colors))
-        // eslint-disable-next-line no-unused-vars
         if (!colorsTuples.every(isValidColorTuple)) return
         colorsTuples.forEach(([name, hex]) => document.documentElement.style.setProperty(toColorVariable(name), hex))
     }

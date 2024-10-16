@@ -26,4 +26,4 @@ npm run lint
 
 ### icons
 
-[Lets Icons](https://icon-sets.iconify.design/lets-icons/) from [iconify.design](https://iconify.design).
+[OOUI icons](https://icon-sets.iconify.design/ooui/) by the [OOUI Team](https://github.com/wikimedia/oojs-ui)

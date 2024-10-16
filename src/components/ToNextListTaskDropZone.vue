@@ -1,7 +1,7 @@
 <template>
     <div
         class="task-drop-zone"
-        :class="classList"
+        :class="{ target: isDropTarget }"
         @dragleave="isDropTarget = false"
         @dragover="onDragOver"
         @drop="onDrop"
@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { computed, defineEmits, defineProps, ref } from 'vue'
+import { defineEmits, defineProps, ref } from 'vue'
 import { isStringDragEvent } from '@/common/dragAndDrop'
 import { useDragDropStore } from '@/stores/dragDropStore'
 
@@ -20,13 +20,6 @@ defineProps({
 const dragDrop = useDragDropStore()
 const emit = defineEmits(['taskDropped'])
 const isDropTarget = ref(false)
-
-const classList = computed(() => {
-    return {
-        available: dragDrop.isTaskDragging,
-        target: isDropTarget.value,
-    }
-})
 
 function onDragOver(event) {
     if (!isStringDragEvent(event)) return
@@ -47,32 +40,22 @@ function onDrop(event) {
 
 <style scoped>
 .task-drop-zone {
-    width: calc(100% - 40px);
-    height: calc(100% - 40px);
-    margin: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: var(--f-low);
-    background-color: transparent;
-    border: 2px dashed var(--b-low);
-    border-radius: var(--border-radius-large);
-    box-sizing: border-box;
-    opacity: 0;
+    height: var(--item-height);
+    width: 100%;
+    padding: 0 10px;
+    color: var(--f-high);
+    font-family: monospace, sans;
+    font-size: 1rem;
+    text-align: left;
+    line-height: var(--item-height);
+    background-color: var(--b-low);
     transition:
         color var(--transition),
         background-color var(--transition),
-        border-color var(--transition),
-        opacity var(--transition);
-}
-
-.available {
-    opacity: 1;
 }
 
 .target {
     color: var(--f-high);
     background-color: var(--b-med);
-    border-color: var(--b-med);
 }
 </style>

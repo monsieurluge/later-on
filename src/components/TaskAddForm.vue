@@ -1,5 +1,5 @@
 <template>
-    <div v-if="appState.edit" class="dummy-form"></div>
+    <div class="dummy-element" v-if="appState.isEdit || appState.isTaskDragging"></div>
     <form v-else :class="{ full: isInputFocused }" @submit.prevent="onSubmit">
         <input
             placeholder="+ add a task"
@@ -13,18 +13,16 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue'
+import { defineEmits, ref } from 'vue'
 import { useAppStateStore } from '@/stores/appStateStore'
-import { useTasksStore } from '@/stores/tasksStore'
 
 const appState = useAppStateStore()
+const emit = defineEmits(['taskSubmitted'])
 const isInputFocused = ref(false)
 const name = ref('')
-const props = defineProps(['listName'])
-const tasks = useTasksStore()
 
 function onSubmit() {
-    tasks.add({ name: name.value, list: props.listName })
+    emit('taskSubmitted', name.value)
     name.value = ''
 }
 
@@ -41,12 +39,11 @@ form {
     max-height: var(--item-height-small);
     background-color: var(--b-med);
     border-radius: var(--border-radius-small);
-    overflow: hidden;
     transition:
         min-height var(--transition),
         max-height var(--transition),
         background-color var(--transition),
-        border-radius var(--transition);
+        border-radius var(--transition),
 }
 
 form:hover,
@@ -85,7 +82,7 @@ input:focus {
     height: var(--item-height);
 }
 
-.dummy-form {
+.dummy-element {
     width: 100%;
     height: var(--item-height-small);
     background-color: var(--b-low);

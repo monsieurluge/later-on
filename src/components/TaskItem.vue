@@ -1,5 +1,5 @@
 <template>
-    <li v-if="appState.edit">
+    <li v-if="appState.isEdit">
         <input
             class="name"
             placeholder="remove the task ?"
@@ -59,7 +59,7 @@ function submit() {
 
 function submitAndQuit() {
     submit()
-    appState.edit = false
+    appState.state = 'idle'
 }
 
 function onDragOver(event) {
@@ -78,15 +78,15 @@ function onDragStart(event) {
     event.dataTransfer.effectAllowed = 'move'
     event.dataTransfer.dropEffect = 'move'
     event.dataTransfer.setData('taskName', props.name)
-    dragDrop.isTaskDragging = true
     setTimeout(() => {
+        appState.state = 'task dragging'
         isDragged.value = true
     }, 10)
 }
 
 function onDragEnd() {
     isDragged.value = false
-    dragDrop.isTaskDragging = false
+    appState.state = 'idle'
 }
 
 function onNameChange(event) {

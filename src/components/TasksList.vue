@@ -1,12 +1,6 @@
 <template>
     <section class="tasks-list">
-        <TaskAddForm :listName="listName" />
-        <ul
-            @dragend="onDragEnd"
-            @dragenter.prevent.stop
-            @dragover.prevent.stop
-            @drop="onDrop"
-        >
+        <ul @dragend="onDragEnd" @dragenter.prevent.stop @dragover.prevent.stop @drop="onDrop">
             <FakeTaskItem v-if="tasksList.length === 0" label="take a coffee, then add some tasks" />
             <template v-for="task in tasksList" :key="task.name">
                 <DummyTaskItem v-if="dragDrop.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'top'" />
@@ -29,9 +23,8 @@ import { computed, defineProps, ref } from 'vue'
 import { useDragDropStore } from '@/stores/dragDropStore'
 import { useTasksStore } from '@/stores/tasksStore'
 import FakeTaskItem from './FakeTaskItem'
-import TaskAddForm from './TaskAddForm'
 import TaskItem from './TaskItem'
-import DummyTaskItem from  './DummyTaskItem'
+import DummyTaskItem from './DummyTaskItem'
 
 const dragDrop = useDragDropStore()
 const fakeDropTargetItem = { name: '', position: 'none' }
@@ -84,7 +77,7 @@ function onDrop(event) {
 
 <style scoped>
 ul {
-    width: var(--tasks-list-width);
+    width: var(--main-width);
     margin: 3px 0 0 0;
     padding: 0;
     list-style: none;

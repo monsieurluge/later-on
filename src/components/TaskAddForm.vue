@@ -39,6 +39,7 @@ form {
     max-height: var(--item-height-small);
     background-color: var(--b-med);
     border-radius: var(--border-radius-small);
+    overflow: hidden;
     transition:
         min-height var(--transition),
         max-height var(--transition),

@@ -1,37 +1,22 @@
 <template>
-    <header>
-        <h1>later on</h1>
-    </header>
+    <TheHeader />
     <main>
-        <TheTasksLists />
+        <RouterView />
     </main>
 </template>
 
 <script>
-import TheTasksLists from './components/TheTasksLists.vue'
+import TheHeader from './components/TheHeader'
 
 export default {
     name: 'App',
-    components: { TheTasksLists },
+    components: { TheHeader },
 }
 </script>
 
 <style>
 #app {
     height: 100%;
-}
-
-header {
-    height: var(--header-height);
-    background-color: var(--b-low);
-}
-
-h1 {
-    margin: 0 0 0 1.4rem;
-    color: var(--f-high);
-    font-size: 1.4rem;
-    font-weight: lighter;
-    line-height: 60px;
 }
 
 main {

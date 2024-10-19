@@ -1,12 +1,12 @@
 <template>
-    <button>{{ current }}</button>
+    <button>{{ label }}</button>
 </template>
 
 <script setup>
 import { defineProps } from 'vue'
 
 defineProps({
-    current: { type: String, required: true },
+    label: { type: String, required: true },
 })
 </script>
 

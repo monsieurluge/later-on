@@ -1,20 +1,23 @@
 <template>
-    <div id="tasks-lists" @dragover.prevent.stop="onListDragOver" @dragenter.prevent.stop>
-        <ListsMenu />
+    <div id="tasks-list" @dragover.prevent.stop="onListDragOver" @dragenter.prevent.stop>
+        <ListsMenu :list="list" />
         <TaskAddForm @task-submitted="addTask" />
-        <TasksList list-name="today" v-show="appState.list === 'today'" />
-        <TasksList list-name="tomorrow" v-show="appState.list === 'tomorrow'" />
+        <TasksList :list="list" />
     </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { defineProps, onMounted } from 'vue'
 import { useAppStateStore } from '@/stores/appStateStore'
 import { useDragDropStore } from '@/stores/dragDropStore'
 import { useTasksStore } from '@/stores/tasksStore'
-import ListsMenu from './TheListsMenu'
-import TaskAddForm from './TaskAddForm'
-import TasksList from './TasksList.vue'
+import ListsMenu from '@/components/TheListsMenu'
+import TaskAddForm from '@/components/TaskAddForm'
+import TasksList from '@/components/TasksList.vue'
+
+const props = defineProps({
+    list: { type: String, required: true }
+})
 
 const appState = useAppStateStore()
 const dragDrop = useDragDropStore()
@@ -29,7 +32,7 @@ onMounted(() => {
 })
 
 function addTask(name) {
-    tasks.add({ name, list: appState.list })
+    tasks.add({ list: props.list, name })
 }
 
 function onListDragOver() {
@@ -38,4 +41,8 @@ function onListDragOver() {
 </script>
 
 <style scoped>
+#tasks-list {
+    padding: 8px 0;
+    background-color: var(--background);
+}
 </style>

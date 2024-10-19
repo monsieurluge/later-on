@@ -29,7 +29,7 @@ import DummyTaskItem from './DummyTaskItem'
 const dragDrop = useDragDropStore()
 const fakeDropTargetItem = { name: '', position: 'none' }
 const dropTargetItem = ref(fakeDropTargetItem)
-const props = defineProps(['listName'])
+const props = defineProps(['list'])
 const tasks = useTasksStore()
 
 const currentTaskName = computed(() => {
@@ -37,7 +37,7 @@ const currentTaskName = computed(() => {
     return workingOn ? workingOn.name : ''
 })
 
-const tasksList = computed(() => tasks.from(props.listName))
+const tasksList = computed(() => tasks.from(props.list))
 
 function onDragEnd() {
     dropTargetItem.value = fakeDropTargetItem

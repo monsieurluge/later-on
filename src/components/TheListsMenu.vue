@@ -1,7 +1,7 @@
 <template>
     <menu>
         <div class="content-wrapper" :class="{ hidden: appState.isTaskDragging }">
-            <ListSwitcherButton :current="appState.list" @click="switchList" />
+            <ListSwitcherButton :label="list" @click="switchList" />
             <TaskEditButton v-if="hasTasks" :isActive="appState.isEdit" @click="toggleEdit" />
         </div>
         <div class="content-wrapper" :class="{ hidden: !appState.isTaskDragging }">
@@ -12,7 +12,8 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, defineProps } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAppStateStore } from '@/stores/appStateStore'
 import { useTasksStore } from '@/stores/tasksStore'
 import ListSwitcherButton from './ListSwitcherButton'
@@ -21,7 +22,12 @@ import TaskEditButton from './TaskEditButton'
 import RemoveTaskDropZone from './RemoveTaskDropZone'
 
 const appState = useAppStateStore()
+const router = useRouter()
 const tasks = useTasksStore()
+
+defineProps({
+    list: { type: String, required: true },
+})
 
 const hasTasks = computed(() => tasks.from(appState.list).length > 0)
 const nextListLabel = computed(() => appState.nextList === 'today' ? '→ to today' : '→ later on')
@@ -37,6 +43,7 @@ function removeTask(name) {
 function switchList() {
     appState.state = 'idle'
     appState.list = appState.nextList
+    router.push({ name: appState.list === 'today' ? 'today' : 'tomorrow' })
 }
 
 function toggleEdit() {

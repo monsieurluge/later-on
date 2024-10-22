@@ -33,16 +33,20 @@
 <script setup>
 import { defineEmits, defineProps, ref } from 'vue'
 import { useAppStateStore } from '@/stores/appStateStore'
-import { useDragDropStore } from '@/stores/dragDropStore';
 import { useTasksStore } from '@/stores/tasksStore'
 import { isStringDragEvent } from '@/common/dragAndDrop'
 
+const props = defineProps({
+    done: { type: [Boolean, String], default: false },
+    name: { type: String, required: true },
+    size: { type: String, required: true },
+    working: { type: Boolean, required: true },
+})
+
 const appState = useAppStateStore()
-const dragDrop = useDragDropStore()
 const emit = defineEmits(['dragOverBottom', 'dragOverTop'])
 const isDragged = ref(false)
 const newName = ref('')
-const props = defineProps(['done', 'name', 'size', 'working'])
 const tasks = useTasksStore()
 
 function changeSize() {
@@ -66,7 +70,7 @@ function onDragOver(event) {
     if (!isStringDragEvent(event)) return
     event.preventDefault()
     event.stopPropagation()
-    dragDrop.lastDropTarget = 'task'
+    appState.lastDropTarget = 'task'
     const targetRect = event.target.getBoundingClientRect()
     const pos = event.clientY - targetRect.top
     pos < targetRect.height / 2

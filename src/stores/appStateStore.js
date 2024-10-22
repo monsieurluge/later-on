@@ -8,6 +8,7 @@ export const useAppStateStore = defineStore('app-state', {
         nextList: (state) => state.list === 'today' ? 'tomorrow' : 'today',
     },
     state: () => ({
+        lastDropTarget: null,
         list: 'today',
         state: 'idle',
     }),

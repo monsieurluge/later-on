@@ -3,7 +3,7 @@
         <ul @dragend="onDragEnd" @dragenter.prevent.stop @dragover.prevent.stop @drop="onDrop">
             <FakeTaskItem v-if="tasksList.length === 0" label="take a coffee, then add some tasks" />
             <template v-for="task in tasksList" :key="task.name">
-                <DummyTaskItem v-if="dragDrop.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'top'" />
+                <DummyTaskItem v-if="appState.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'top'" />
                 <TaskItem
                     :done="task.done"
                     :name="task.name"
@@ -12,7 +12,7 @@
                     @dragOverTop="onDragOverTop"
                     @dragOverBottom="onDragOverBottom"
                 />
-                <DummyTaskItem v-if="dragDrop.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'bottom'" />
+                <DummyTaskItem v-if="appState.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'bottom'" />
             </template>
         </ul>
     </section>
@@ -20,16 +20,19 @@
 
 <script setup>
 import { computed, defineProps, ref } from 'vue'
-import { useDragDropStore } from '@/stores/dragDropStore'
+import { useAppStateStore } from '@/stores/appStateStore'
 import { useTasksStore } from '@/stores/tasksStore'
 import FakeTaskItem from './FakeTaskItem'
 import TaskItem from './TaskItem'
 import DummyTaskItem from './DummyTaskItem'
 
-const dragDrop = useDragDropStore()
+const props = defineProps({
+    list: { type: String, required: true },
+})
+
+const appState = useAppStateStore()
 const fakeDropTargetItem = { name: '', position: 'none' }
 const dropTargetItem = ref(fakeDropTargetItem)
-const props = defineProps(['list'])
 const tasks = useTasksStore()
 
 const currentTaskName = computed(() => {

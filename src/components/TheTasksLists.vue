@@ -10,14 +10,12 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useAppStateStore } from '@/stores/appStateStore'
-import { useDragDropStore } from '@/stores/dragDropStore'
 import { useTasksStore } from '@/stores/tasksStore'
 import ListsMenu from './TheListsMenu'
 import TaskAddForm from './TaskAddForm'
 import TasksList from './TasksList.vue'
 
 const appState = useAppStateStore()
-const dragDrop = useDragDropStore()
 const tasks = useTasksStore()
 
 onMounted(() => {
@@ -33,7 +31,7 @@ function addTask(name) {
 }
 
 function onListDragOver() {
-    dragDrop.lastDropTarget = 'tasks-lists'
+    appState.lastDropTarget = 'tasks-lists'
 }
 </script>
 

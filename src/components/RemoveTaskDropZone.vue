@@ -13,9 +13,9 @@
 <script setup>
 import { defineEmits, ref } from 'vue'
 import { isStringDragEvent } from '@/common/dragAndDrop'
-import { useDragDropStore } from '@/stores/dragDropStore'
+import { useAppStateStore } from '@/stores/appStateStore'
 
-const dragDrop = useDragDropStore()
+const appState = useAppStateStore()
 const emit = defineEmits(['taskDropped'])
 const isDropTarget = ref(false)
 
@@ -24,7 +24,7 @@ function onDragOver(event) {
     event.preventDefault()
     event.stopPropagation()
     isDropTarget.value = true
-    dragDrop.lastDropTarget = 'task-drop-zone'
+    appState.lastDropTarget = 'task-drop-zone'
 }
 
 function onDrop(event) {

@@ -7,7 +7,9 @@
 <script setup>
 import { defineProps } from 'vue'
 
-defineProps(['isActive'])
+defineProps({
+    isActive: { type: [Boolean, String], default: false }
+})
 </script>
 
 <style scoped>

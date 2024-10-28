@@ -1,21 +1,19 @@
 <template>
-    <section class="tasks-list">
-        <ul @dragend="onDragEnd" @dragenter.prevent.stop @dragover.prevent.stop @drop="onDrop">
-            <FakeTaskItem v-if="tasksList.length === 0" label="take a coffee, then add some tasks" />
-            <template v-for="task in tasksList" :key="task.name">
-                <DummyTaskItem v-if="appState.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'top'" />
-                <TaskItem
-                    :done="task.done"
-                    :name="task.name"
-                    :size="task.size"
-                    :working="currentTaskName === task.name"
-                    @dragOverTop="onDragOverTop"
-                    @dragOverBottom="onDragOverBottom"
-                />
-                <DummyTaskItem v-if="appState.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'bottom'" />
-            </template>
-        </ul>
-    </section>
+    <ul @dragend="onDragEnd" @dragenter.prevent.stop @dragover.prevent.stop @drop="onDrop">
+        <FakeTaskItem v-if="tasksList.length === 0" label="take a coffee, then add some tasks" />
+        <template v-for="task in tasksList" :key="task.name">
+            <DummyTaskItem v-if="appState.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'top'" />
+            <TaskItem
+                :done="task.done"
+                :name="task.name"
+                :size="task.size"
+                :working="currentTaskName === task.name"
+                @dragOverTop="onDragOverTop"
+                @dragOverBottom="onDragOverBottom"
+            />
+            <DummyTaskItem v-if="appState.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'bottom'" />
+        </template>
+    </ul>
 </template>
 
 <script setup>

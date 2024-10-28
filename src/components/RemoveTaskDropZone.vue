@@ -38,9 +38,8 @@ function onDrop(event) {
 
 <style scoped>
 .task-drop-zone {
+    width: var(--item-height);
     height: var(--item-height);
-    width: fit-content;
-    padding: 0 10px;
     color: var(--f-high);
     line-height: var(--item-height);
     text-align: center;

@@ -1,6 +1,6 @@
 <template>
     <div id="tasks-list" @dragover.prevent.stop="onListDragOver" @dragenter.prevent.stop>
-        <ListsMenu :list="list" />
+        <TasksListHeader :list="list" />
         <TaskAddForm @task-submitted="addTask" />
         <TasksList :list="list" />
     </div>
@@ -10,7 +10,7 @@
 import { defineProps, onMounted } from 'vue'
 import { useAppStateStore } from '@/stores/appStateStore'
 import { useTasksStore } from '@/stores/tasksStore'
-import ListsMenu from '@/components/TheListsMenu'
+import TasksListHeader from '@/components/TasksListHeader'
 import TaskAddForm from '@/components/TaskAddForm'
 import TasksList from '@/components/TasksList.vue'
 

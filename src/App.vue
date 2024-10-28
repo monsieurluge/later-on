@@ -1,16 +1,16 @@
 <template>
-    <TheHeader />
+    <AppHeader />
     <main>
         <RouterView />
     </main>
 </template>
 
 <script>
-import TheHeader from './components/TheHeader'
+import AppHeader from './components/AppHeader'
 
 export default {
     name: 'App',
-    components: { TheHeader },
+    components: { AppHeader },
 }
 </script>
 

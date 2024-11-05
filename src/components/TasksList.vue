@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { computed, defineProps, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useAppStateStore } from '@/stores/appStateStore'
 import { useTasksStore } from '@/stores/tasksStore'
 import FakeTaskItem from './FakeTaskItem'

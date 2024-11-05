@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps, ref } from 'vue'
+import { ref } from 'vue'
 import { useAppStateStore } from '@/stores/appStateStore'
 import { useTasksStore } from '@/stores/tasksStore'
 import { isStringDragEvent } from '@/common/dragAndDrop'

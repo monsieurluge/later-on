@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { defineEmits, ref } from 'vue'
+import { ref } from 'vue'
 import { isStringDragEvent } from '@/common/dragAndDrop'
 import { useAppStateStore } from '@/stores/appStateStore'
 

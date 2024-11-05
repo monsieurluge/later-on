@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { defineProps, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useAppStateStore } from '@/stores/appStateStore'
 import { useTasksStore } from '@/stores/tasksStore'
 import TasksListHeader from '@/components/TasksListHeader'

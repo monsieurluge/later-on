@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps, ref } from 'vue'
+import { ref } from 'vue'
 import { isStringDragEvent } from '@/common/dragAndDrop'
 import { useAppStateStore } from '@/stores/appStateStore'
 

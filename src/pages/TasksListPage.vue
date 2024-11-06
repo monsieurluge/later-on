@@ -1,5 +1,5 @@
 <template>
-    <div id="tasks-list" @dragover.prevent.stop="onListDragOver" @dragenter.prevent.stop>
+    <div id="tasks-list" @dragover.prevent.stop="onListDragOver" @dragenter.prevent.stop @keyup.enter="handleEnterKeyPressed">
         <TasksListHeader :list="list" />
         <TaskAddForm @task-submitted="addTask" />
         <TasksList :list="list" />
@@ -31,6 +31,12 @@ onMounted(() => {
 
 function addTask(name) {
     tasks.add({ list: props.list, name })
+}
+
+function handleEnterKeyPressed() {
+    if (appState.isEdit) {
+        appState.state = 'idle'
+    }
 }
 
 function onListDragOver() {

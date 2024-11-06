@@ -1,40 +1,25 @@
 <template>
-    <li v-if="appState.isEdit">
-        <input
-            class="name"
-            placeholder="remove the task ?"
-            type="text"
-            :value="name"
-            @blur="submit"
-            @focusin="onNameChange"
-            @input="onNameChange"
-            @keyup.enter="submitAndQuit"
-        />
-    </li>
     <li
-        v-else
         draggable="true"
-        :class="{ done, working, dragged: isDragged }"
-        @click="toggleCompletion"
+        :class="{ dragged: isDragged }"
         @dragend="onDragEnd"
         @dragover="onDragOver"
         @dragstart="onDragStart"
     >
-        <span class="name" :title="name">{{ name }}</span>
-        <button :title="size" @click.prevent.stop="changeSize">
-            <template v-if="size === 'none'"><span class="empty all-empty">▫▫▫</span></template>
-            <template v-if="size === 'small'"><span class="empty">▫▫</span>▪</template>
-            <template v-if="size === 'medium'"><span class="empty">▫</span>▪▪</template>
-            <template v-if="size === 'large'">▪▪▪</template>
-        </button>
+        <span class="task-name" :class="{ done, working }" :title="name">{{ name }}</span>
+        <div class="task-actions">
+            <TaskItemSizeButton :size="size" @click.prevent.stop="$emit('sizeClicked')" />
+        </div>
     </li>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { useAppStateStore } from '@/stores/appStateStore'
-import { useTasksStore } from '@/stores/tasksStore'
 import { isStringDragEvent } from '@/common/dragAndDrop'
+import { useAppStateStore } from '@/stores/appStateStore'
+import TaskItemSizeButton from './TaskItemSizeButton.vue'
+
+const emit = defineEmits(['sizeClicked', 'dragOverBottom', 'dragOverTop'])
 
 const props = defineProps({
     done: { type: [Boolean, String], default: false },
@@ -44,27 +29,7 @@ const props = defineProps({
 })
 
 const appState = useAppStateStore()
-const emit = defineEmits(['dragOverBottom', 'dragOverTop'])
 const isDragged = ref(false)
-const newName = ref('')
-const tasks = useTasksStore()
-
-function changeSize() {
-    tasks.changeSize(props.name)
-}
-
-function submit() {
-    if (newName.value.length === 0) {
-        tasks.remove(props.name)
-        return
-    }
-    tasks.rename({ oldName: props.name, newName: newName.value })
-}
-
-function submitAndQuit() {
-    submit()
-    appState.state = 'idle'
-}
 
 function onDragOver(event) {
     if (!isStringDragEvent(event)) return
@@ -92,14 +57,6 @@ function onDragEnd() {
     isDragged.value = false
     appState.state = 'idle'
 }
-
-function onNameChange(event) {
-    newName.value = event.target.value
-}
-
-function toggleCompletion() {
-    tasks.toggleCompletion(props.name)
-}
 </script>
 
 <style scoped>
@@ -110,8 +67,8 @@ li {
     display: flex;
     align-items: center;
     flex-direction: row;
+    justify-content: space-between;
     background-color: var(--b-low);
-    border: none;
     border-radius: 5px;
     box-sizing: border-box;
     transition: background-color 0.3s;
@@ -141,74 +98,41 @@ li.working::before {
     border-radius: 50%;
 }
 
-.name {
-    width: 100%;
+.task-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    margin-right: calc((var(--item-height) - var(--item-button-size)) / 2);
+}
+
+.task-name {
+    flex: 1;
+    display: inline-block;
     padding: 0 10px;
     color: var(--f-high);
     font-size: 1em;
     font-family: monospace, sans;
+    line-height: var(--item-height);
     overflow-x: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     cursor: default;
 }
 
-input.name {
-    height: 100%;
-    border: none;
-    background-color: transparent;
-    cursor: text;
+.task-name.working::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-color: var(--f-med);
+    border: 2px solid var(--background);
+    border-radius: 50%;
 }
 
-input.error {
-    color: var(--f-inv);
-    background-color: var(--b-inv);
-}
-
-.done .name {
+.task-name.done {
     text-decoration: line-through;
-}
-
-button {
-    height: 100%;
-    padding: 3px;
-    color: var(--f-low);
-    font-family: monospace, sans;
-    text-orientation: sideways;
-    writing-mode: vertical-lr;
-    background-color: transparent;
-    border: none;
-    border-left: 1px solid transparent;
-    border-radius: 0 5px 5px 0;
-    box-sizing: border-box;
-    transition:
-        background-color var(--transition),
-        border-color var(--transition),
-        color var(--transition);
-}
-
-li:hover button {
-    border-color: var(--background);
-}
-
-.empty {
-    color: var(--f-low);
-    transition: color var(--transition);
-}
-
-.all-empty {
-    color: transparent;
-}
-
-button:hover {
-    color: var(--f-med);
-}
-
-li:hover .all-empty {
-    color: var(--f-low);
-}
-
-button:hover .all-empty {
-    color: var(--f-med);
 }
 </style>

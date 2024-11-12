@@ -39,4 +39,12 @@ button {
 button:hover {
     background-color: var(--b-med);
 }
+
+.all-empty {
+    color: var(--b-low);
+}
+
+button:hover .all-empty {
+    color: var(--f-low);
+}
 </style>

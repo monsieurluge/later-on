@@ -1,15 +1,16 @@
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
+import { usePiniaLocalStorage } from './composables/piniaLocalStorage'
 import { createTheme } from './plugins/theme'
 import router from './router'
 import App from './App.vue'
 import './assets/styles.css'
 
-const app = createApp(App)
-const pinia = createPinia()
+const pinia = createPinia().use(usePiniaLocalStorage({ storageKey: 'later-on' }))
 const theme = createTheme({ storageKey: 'later-on-theme' })
 
-app.use(pinia)
-app.use(theme)
-app.use(router)
-app.mount('#app')
+createApp(App)
+    .use(pinia)
+    .use(theme)
+    .use(router)
+    .mount('#app')

@@ -29,7 +29,10 @@ defineProps({
     list: { type: String, required: true },
 })
 
-const hasTasks = computed(() => tasks.from(appState.list).length > 0)
+const hasTasks = computed(() => {
+    const list = appState.list === 'today' ? tasks.fromToday : tasks.fromTomorrow
+    return list.length > 0
+})
 const nextListLabel = computed(() => appState.nextList === 'today' ? '→ to today' : '→ later on')
 
 function moveTask(name) {

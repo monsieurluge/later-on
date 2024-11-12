@@ -22,6 +22,7 @@ const appState = useAppStateStore()
 const tasks = useTasksStore()
 
 onMounted(() => {
+    tasks.initialize()
     window.addEventListener('keyup', event => {
         if (event.code === 'Escape' && appState.isEdit) {
             appState.state = 'idle'

@@ -45,7 +45,7 @@ const currentTaskName = computed(() => {
     return workingOn ? workingOn.name : ''
 })
 
-const tasksList = computed(() => tasks.from(props.list))
+const tasksList = computed(() => props.list === 'today' ? tasks.fromToday : tasks.fromTomorrow)
 
 function changeSize(name) {
     tasks.changeSize(name)

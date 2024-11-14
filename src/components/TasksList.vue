@@ -1,25 +1,29 @@
 <template>
-    <ul @dragend="onDragEnd" @dragenter.prevent.stop @dragover.prevent.stop @drop="onDrop">
-        <FakeTaskItem v-if="tasksList.length === 0" label="take a coffee, then add some tasks" />
-        <template v-for="task in tasksList" :key="task.name">
-            <DummyTaskItem v-if="appState.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'top'" />
-            <TaskItemInput v-if="appState.isEdit" :name="task.name" @submit="rename" />
-            <TaskItem
-                v-else
-                :done="task.done"
-                :name="task.name"
-                :size="task.size"
-                :working="currentTaskName === task.name"
-                @click="toggleCompletion(task.name)"
-                @dragOverTop="onDragOverTop"
-                @dragOverBottom="onDragOverBottom"
-                @sizeClicked="changeSize(task.name)"
-            />
-            <DummyTaskItem
-                v-if="appState.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'bottom'"
-            />
-        </template>
-    </ul>
+    <div class="tasks-list">
+        <TasksListHeader :list="list" />
+        <TaskAddForm @task-submitted="addTask" />
+        <ul @dragend="onDragEnd" @dragenter.prevent.stop @dragover.prevent.stop @drop="onDrop">
+            <FakeTaskItem v-if="tasksList.length === 0" label="take a coffee, then add some tasks" />
+            <template v-for="task in tasksList" :key="task.name">
+                <DummyTaskItem v-if="appState.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'top'" />
+                <TaskItemInput v-if="appState.isEdit" :name="task.name" @submit="rename" />
+                <TaskItem
+                    v-else
+                    :done="task.done"
+                    :name="task.name"
+                    :size="task.size"
+                    :working="currentTaskName === task.name"
+                    @click="toggleCompletion(task.name)"
+                    @dragOverTop="onDragOverTop"
+                    @dragOverBottom="onDragOverBottom"
+                    @sizeClicked="changeSize(task.name)"
+                />
+                <DummyTaskItem
+                    v-if="appState.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'bottom'"
+                />
+            </template>
+        </ul>
+    </div>
 </template>
 
 <script setup>
@@ -28,8 +32,10 @@ import { useAppStateStore } from '@/stores/appStateStore'
 import { useTasksStore } from '@/stores/tasksStore'
 import DummyTaskItem from './DummyTaskItem'
 import FakeTaskItem from './FakeTaskItem'
+import TaskAddForm from './TaskAddForm'
 import TaskItem from './TaskItem'
 import TaskItemInput from './TaskItemInput'
+import TasksListHeader from './TasksListHeader'
 
 const props = defineProps({
     list: { type: String, required: true },
@@ -46,6 +52,10 @@ const currentTaskName = computed(() => {
 })
 
 const tasksList = computed(() => props.list === 'today' ? tasks.fromToday : tasks.fromTomorrow)
+
+function addTask(name) {
+    tasks.add({ list: props.list, name })
+}
 
 function changeSize(name) {
     tasks.changeSize(name)
@@ -100,6 +110,11 @@ function toggleCompletion(name) {
 </script>
 
 <style scoped>
+.tasks-list {
+    padding: 8px 0;
+    background-color: var(--background);
+}
+
 ul {
     width: var(--main-width);
     margin: 3px 0 0 0;

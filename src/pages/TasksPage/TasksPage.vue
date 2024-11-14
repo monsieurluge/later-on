@@ -1,20 +1,19 @@
 <template>
-    <div id="tasks-list" @dragover.prevent.stop="onListDragOver" @dragenter.prevent.stop @keyup.enter="handleEnterKeyPressed">
-        <TasksListHeader :list="list" />
-        <TaskAddForm @task-submitted="addTask" />
-        <TasksList :list="list" />
-    </div>
+    <TasksList
+        :list="list"
+        @dragover.prevent.stop="onListDragOver"
+        @dragenter.prevent.stop
+        @keyup.enter="handleEnterKeyPressed"
+    />
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
 import { useAppStateStore } from '@/stores/appStateStore'
 import { useTasksStore } from '@/stores/tasksStore'
-import TasksListHeader from '@/components/TasksListHeader'
-import TaskAddForm from '@/components/TaskAddForm'
 import TasksList from '@/components/TasksList.vue'
 
-const props = defineProps({
+defineProps({
     list: { type: String, required: true }
 })
 
@@ -29,10 +28,6 @@ onMounted(() => {
         }
     })
 })
-
-function addTask(name) {
-    tasks.add({ list: props.list, name })
-}
 
 function handleEnterKeyPressed() {
     if (appState.isEdit) {

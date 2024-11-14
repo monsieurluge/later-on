@@ -44,13 +44,13 @@ function removeTask(name) {
 }
 
 function switchList() {
-    appState.state = 'idle'
-    appState.list = appState.nextList
+    appState.toState('idle')
+    appState.toNextList()
     router.push({ name: appState.list === 'today' ? 'today' : 'tomorrow' })
 }
 
 function toggleEdit() {
-    appState.state = appState.isEdit ? 'idle' : 'edit'
+    appState.toggleEdit()
 }
 </script>
 

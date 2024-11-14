@@ -40,7 +40,7 @@ function onDragOver(event) {
     if (!isStringDragEvent(event)) return
     event.preventDefault()
     event.stopPropagation()
-    appState.lastDropTarget = 'task'
+    appState.setDropTarget('task')
     const targetRect = event.target.getBoundingClientRect()
     const pos = event.clientY - targetRect.top
     pos < targetRect.height / 2
@@ -53,14 +53,14 @@ function onDragStart(event) {
     event.dataTransfer.dropEffect = 'move'
     event.dataTransfer.setData('taskName', props.name)
     setTimeout(() => {
-        appState.state = 'task dragging'
+        appState.toState('task dragging')
         isDragged.value = true
     }, 10)
 }
 
 function onDragEnd() {
     isDragged.value = false
-    appState.state = 'idle'
+    appState.toState('idle')
 }
 </script>
 

@@ -24,19 +24,19 @@ onMounted(() => {
     tasks.initialize()
     window.addEventListener('keyup', event => {
         if (event.code === 'Escape' && appState.isEdit) {
-            appState.state = 'idle'
+            appState.toState('idle')
         }
     })
 })
 
 function handleEnterKeyPressed() {
     if (appState.isEdit) {
-        appState.state = 'idle'
+        appState.toState('idle')
     }
 }
 
 function onListDragOver() {
-    appState.lastDropTarget = 'tasks-lists'
+    appState.setDropTarget('tasks-lists')
 }
 </script>
 

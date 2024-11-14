@@ -26,7 +26,7 @@ function onDragOver(event) {
     event.preventDefault()
     event.stopPropagation()
     isDropTarget.value = true
-    appState.lastDropTarget = 'task-drop-zone'
+    appState.setDropTarget('task-drop-zone')
 }
 
 function onDrop(event) {

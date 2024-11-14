@@ -12,4 +12,18 @@ export const useAppStateStore = defineStore('app-state', {
         isTaskDragging: (state) => state.state === 'task dragging',
         nextList: (state) => state.list === 'today' ? 'tomorrow' : 'today',
     },
+    actions: {
+        setDropTarget(target) {
+            this.lastDropTarget = target
+        },
+        toggleEdit() {
+            this.state = this.isEdit ? 'idle' : 'edit'
+        },
+        toNextList() {
+            this.list = this.nextList
+        },
+        toState(newState) {
+            this.state = newState
+        },
+    },
 })

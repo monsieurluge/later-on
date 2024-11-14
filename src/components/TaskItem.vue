@@ -8,7 +8,12 @@
     >
         <span class="task-name" :class="{ done, working }" :title="name">{{ name }}</span>
         <div class="task-actions">
-            <TaskItemSizeButton :size="size" @click.prevent.stop="$emit('sizeClicked')" />
+            <TaskButton @clicked="$emit('sizeClicked')">
+                <template v-if="size === 'none'">•</template>
+                <template v-if="size === 'small'">S</template>
+                <template v-if="size === 'medium'">M</template>
+                <template v-if="size === 'large'">L</template>
+            </TaskButton>
         </div>
     </li>
 </template>
@@ -17,7 +22,7 @@
 import { ref } from 'vue'
 import { isStringDragEvent } from '@/common/dragAndDrop'
 import { useAppStateStore } from '@/stores/appStateStore'
-import TaskItemSizeButton from './TaskItemSizeButton.vue'
+import TaskButton from './TaskButton'
 
 const emit = defineEmits(['sizeClicked', 'dragOverBottom', 'dragOverTop'])
 

@@ -31,6 +31,17 @@
     --transition: 0.3s;
 }
 
+@font-face {
+    font-family: 'vintage';
+    font-style: normal;
+    font-weight: 400;
+    src:
+        local('Roboto'),
+        local('Roboto-Regular'),
+        url('./Holen Vintage.otf')
+        format('opentype');
+}
+
 html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

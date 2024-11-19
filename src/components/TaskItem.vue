@@ -21,7 +21,7 @@
 <script setup>
 import { ref } from 'vue'
 import { isStringDragEvent } from '@/common/dragAndDrop'
-import { useAppStateStore } from '@/stores/appStateStore'
+import { useAppState } from '@/stores/appState'
 import TaskButton from './TaskButton'
 
 const emit = defineEmits(['sizeClicked', 'dragOverBottom', 'dragOverTop'])
@@ -33,7 +33,7 @@ const props = defineProps({
     working: { type: Boolean, required: true },
 })
 
-const appState = useAppStateStore()
+const appState = useAppState()
 const isDragged = ref(false)
 
 function onDragOver(event) {

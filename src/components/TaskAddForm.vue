@@ -14,9 +14,9 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useAppStateStore } from '@/stores/appStateStore'
+import { useAppState } from '@/stores/appState'
 
-const appState = useAppStateStore()
+const appState = useAppState()
 const emit = defineEmits(['taskSubmitted'])
 const isInputFocused = ref(false)
 const name = ref('')

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const useAppStateStore = defineStore('app-state', {
+export const useAppState = defineStore('app-state', {
     state: () => ({
         lastDropTarget: null,
         list: 'today',

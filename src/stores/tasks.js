@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { taskSizes } from '@/common/taskSizes'
 import { moveOldTaskToList, not, previouslyFinishedTask, todayFirst } from '@/common/utils'
 
-export const useTasksStore = defineStore('tasks', {
+export const useTasks = defineStore('tasks', {
     state: () => ({
         tasks: [],
     }),
@@ -31,13 +31,13 @@ export const useTasksStore = defineStore('tasks', {
             task.size = taskSizes.get(task.size).next
             task.lastUpdated = Date.now()
         },
-        initialize() {
+        async fetchTasks() {
             this.tasks = this.tasks
                 .filter(not(previouslyFinishedTask)) // remove finished tasks from past days only
                 .sort(todayFirst) // sort tasks by list without touching their order in each list
                 .map(moveOldTaskToList('today')) // move old "tomorrow" tasks to "today"
         },
-        moveAfter(name, target) {
+        moveAfter({ name, target }) {
             if (name === target) return
             const task = this.tasks.find(task => task.name === name)
             const index = this.tasks.indexOf(task)
@@ -46,7 +46,7 @@ export const useTasksStore = defineStore('tasks', {
             this.tasks.splice(position, 0, task)
             task.lastUpdated = Date.now()
         },
-        moveBefore(name, target) {
+        moveBefore({ name, target }) {
             if (name === target) return
             const task = this.tasks.find(task => task.name === name)
             const index = this.tasks.indexOf(task)

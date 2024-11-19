@@ -15,7 +15,7 @@ export function usePiniaLocalStorage({ storageKey }) {
         }, { detached: true })
 
         options.persist.forEach(key => {
-            store.$state[key] = storage.value[key]
+            store.$state[key] = storage.value[key] || store.$state[key]
         })
     }
 }

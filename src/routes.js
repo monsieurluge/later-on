@@ -1,4 +1,4 @@
-import TasksPage from './pages/TasksPage/TasksPage.vue'
+import TasksPage from './pages/TasksPage.vue'
 
 const routes = [
     {

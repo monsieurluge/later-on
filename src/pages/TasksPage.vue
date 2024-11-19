@@ -9,19 +9,19 @@
 
 <script setup>
 import { onMounted } from 'vue'
-import { useAppStateStore } from '@/stores/appStateStore'
-import { useTasksStore } from '@/stores/tasksStore'
+import { useAppState } from '@/stores/appState'
+import { useTasks } from '@/stores/tasks'
 import TasksList from '@/components/TasksList.vue'
 
 defineProps({
     list: { type: String, required: true }
 })
 
-const appState = useAppStateStore()
-const tasks = useTasksStore()
+const appState = useAppState()
+const tasks = useTasks()
 
-onMounted(() => {
-    tasks.initialize()
+onMounted(async () => {
+    await tasks.fetchTasks()
     window.addEventListener('keyup', event => {
         if (event.code === 'Escape' && appState.isEdit) {
             appState.toState('idle')

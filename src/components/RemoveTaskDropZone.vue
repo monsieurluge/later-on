@@ -13,9 +13,9 @@
 <script setup>
 import { ref } from 'vue'
 import { isStringDragEvent } from '@/common/dragAndDrop'
-import { useAppStateStore } from '@/stores/appStateStore'
+import { useAppState } from '@/stores/appState'
 
-const appState = useAppStateStore()
+const appState = useAppState()
 const emit = defineEmits(['taskDropped'])
 const isDropTarget = ref(false)
 

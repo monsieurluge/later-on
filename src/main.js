@@ -6,7 +6,7 @@ import router from './router'
 import App from './App.vue'
 import './assets/styles.css'
 
-const pinia = createPinia().use(usePiniaLocalStorage({ storageKey: 'later-on' }))
+const pinia = createPinia().use(usePiniaLocalStorage({ storageKey: 'later-on-REMOVEME' }))
 const theme = createTheme({ storageKey: 'later-on-theme' })
 
 createApp(App)

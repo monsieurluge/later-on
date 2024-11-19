@@ -14,16 +14,16 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAppStateStore } from '@/stores/appStateStore'
-import { useTasksStore } from '@/stores/tasksStore'
+import { useAppState } from '@/stores/appState'
+import { useTasks } from '@/stores/tasks'
 import ListSwitcherButton from './ListSwitcherButton'
 import ToNextListTaskDropZone from './ToNextListTaskDropZone'
 import TaskEditButton from './TaskEditButton'
 import RemoveTaskDropZone from './RemoveTaskDropZone'
 
-const appState = useAppStateStore()
+const appState = useAppState()
 const router = useRouter()
-const tasks = useTasksStore()
+const tasks = useTasks()
 
 defineProps({
     list: { type: String, required: true },

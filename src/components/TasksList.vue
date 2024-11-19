@@ -28,8 +28,8 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { useAppStateStore } from '@/stores/appStateStore'
-import { useTasksStore } from '@/stores/tasksStore'
+import { useAppState } from '@/stores/appState'
+import { useTasks } from '@/stores/tasks'
 import DummyTaskItem from './DummyTaskItem'
 import FakeTaskItem from './FakeTaskItem'
 import TaskAddForm from './TaskAddForm'
@@ -41,10 +41,10 @@ const props = defineProps({
     list: { type: String, required: true },
 })
 
-const appState = useAppStateStore()
+const appState = useAppState()
 const fakeDropTargetItem = { name: '', position: 'none' }
 const dropTargetItem = ref(fakeDropTargetItem)
-const tasks = useTasksStore()
+const tasks = useTasks()
 
 const currentTaskName = computed(() => {
     const workingOn = tasks.tasks.filter(({ list }) => list === 'today').find(({ done }) => !done)
@@ -88,10 +88,16 @@ function onDrop(event) {
     event.preventDefault()
     event.stopPropagation()
     if (dropTargetItem.value.position === 'top') {
-        tasks.moveBefore(event.dataTransfer.getData('taskName'), dropTargetItem.value.name)
+        tasks.moveBefore({
+            name: event.dataTransfer.getData('taskName'),
+            target: dropTargetItem.value.name,
+        })
     }
     if (dropTargetItem.value.position === 'bottom') {
-        tasks.moveAfter(event.dataTransfer.getData('taskName'), dropTargetItem.value.name)
+        tasks.moveAfter({
+            name: event.dataTransfer.getData('taskName'),
+            target: dropTargetItem.value.name
+        })
     }
     dropTargetItem.value = fakeDropTargetItem
 }

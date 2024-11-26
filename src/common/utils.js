@@ -14,6 +14,8 @@ export const moveOldTaskToList = list => task => {
 
 export const previouslyFinishedTask = task => task.done === true && task.lastUpdated < thisMorning
 
+export const randomString = length => [...Array(length)].map(() => Math.random().toString(36)[2]).join('')
+
 export const todayFirst = (a, b) => {
     if (a.list === b.list) return 0
     return a.list === 'today' ? -1 : 1

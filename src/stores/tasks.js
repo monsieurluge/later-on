@@ -1,15 +1,19 @@
 import { defineStore } from 'pinia'
 import { taskSizes } from '@/common/taskSizes'
-import { moveOldTaskToList, not, previouslyFinishedTask, todayFirst } from '@/common/utils'
+import { moveOldTaskToList, not, previouslyFinishedTask, randomString, todayFirst } from '@/common/utils'
 
 export const useTasks = defineStore('tasks', {
     state: () => ({
+        collection: 'default',
+        collections: [{ id: 'default', permanent: true }],
+        list: 'today',
         tasks: [],
     }),
-    persist: ['tasks'],
+    persist: ['collection', 'collections', 'tasks'],
     getters: {
-        fromToday: state => state.tasks.filter(task => task.list === 'today'),
-        fromTomorrow: state => state.tasks.filter(task => task.list === 'tomorrow'),
+        fromToday: state => state.tasks.filter(task => task.list === 'today' && task.collection === state.collection),
+        fromTomorrow: state => state.tasks.filter(task => task.list === 'tomorrow' && task.collection === state.collection),
+        nextList: state => (state.list === 'today' ? 'tomorrow' : 'today'),
     },
     actions: {
         add({ name, list }) {
@@ -18,6 +22,7 @@ export const useTasks = defineStore('tasks', {
             const taskExists = this.tasks.find(task => task.name === trimmedName)
             if (taskExists) return
             this.tasks.push({
+                collection: this.collection,
                 done: false,
                 lastUpdated: Date.now(),
                 list,
@@ -31,8 +36,15 @@ export const useTasks = defineStore('tasks', {
             task.size = taskSizes.get(task.size).next
             task.lastUpdated = Date.now()
         },
-        async fetchTasks() {
+        createCollection() {
+            this.collections.push({
+                id: randomString(8),
+                permanent: false,
+            })
+        },
+        fetchTasks() {
             this.tasks = this.tasks
+                .map(task => ({ collection: 'default', ...task })) // TEMPORARY
                 .filter(not(previouslyFinishedTask)) // remove finished tasks from past days only
                 .sort(todayFirst) // sort tasks by list without touching their order in each list
                 .map(moveOldTaskToList('today')) // move old "tomorrow" tasks to "today"
@@ -80,11 +92,24 @@ export const useTasks = defineStore('tasks', {
             task.lastUpdated = Date.now()
             task.name = trimmedName
         },
+        setCurrentCollection(id) {
+            if (!this.collections.find(collection => collection.id === id)) return
+            this.collection = id
+        },
         toggleCompletion(name) {
             const task = this.tasks.find(task => task.name === name)
             if (!task) return
             task.done = !task.done
             task.lastUpdated = Date.now()
+        },
+        toNextList() {
+            this.list = this.nextList
+        },
+        toState(newState) {
+            this.state = newState
+        },
+        toToday() {
+            this.list = 'today'
         },
     },
 })

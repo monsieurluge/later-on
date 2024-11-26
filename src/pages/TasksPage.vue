@@ -1,6 +1,7 @@
 <template>
+    <CollectionsNav />
     <TasksList
-        :list="list"
+        :list="tasksStore.list"
         @dragover.prevent.stop="onListDragOver"
         @dragenter.prevent.stop
         @keyup.enter="handleEnterKeyPressed"
@@ -8,41 +9,43 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import CollectionsNav from '@/components/CollectionsNav'
+import TasksList from '@/components/TasksList.vue'
 import { useAppState } from '@/stores/appState'
 import { useTasks } from '@/stores/tasks'
-import TasksList from '@/components/TasksList.vue'
 
-defineProps({
-    list: { type: String, required: true }
-})
+const appStateStore = useAppState()
+const route = useRoute()
+const tasksStore = useTasks()
 
-const appState = useAppState()
-const tasks = useTasks()
-
-onMounted(async () => {
-    await tasks.fetchTasks()
+onMounted(() => {
+    tasksStore.fetchTasks()
     window.addEventListener('keyup', event => {
-        if (event.code === 'Escape' && appState.isEdit) {
-            appState.toState('idle')
+        if (event.code === 'Escape' && appStateStore.isEdit) {
+            appStateStore.toState('idle')
         }
     })
 })
 
+watch(
+    () => route.params.id,
+    newId => {
+        tasksStore.toToday()
+        tasksStore.setCurrentCollection(newId)
+    },
+)
+
 function handleEnterKeyPressed() {
-    if (appState.isEdit) {
-        appState.toState('idle')
+    if (appStateStore.isEdit) {
+        appStateStore.toState('idle')
     }
 }
 
 function onListDragOver() {
-    appState.setDropTarget('tasks-lists')
+    appStateStore.setDropTarget('tasks-lists')
 }
 </script>
 
-<style scoped>
-#tasks-list {
-    padding: 8px 0;
-    background-color: var(--background);
-}
-</style>
+<style scoped></style>

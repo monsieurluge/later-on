@@ -2,22 +2,14 @@ import TasksPage from './pages/TasksPage.vue'
 
 const routes = [
     {
-        alias: '/today',
         component: TasksPage,
+        name: 'home',
         path: '/',
-        props: { list: 'today' },
     },
     {
         component: TasksPage,
-        name: 'today',
-        path: '/today',
-        props: { list: 'today' },
-    },
-    {
-        component: TasksPage,
-        name: 'tomorrow',
-        path: '/tomorrow',
-        props: { list: 'tomorrow' },
+        name: 'collection',
+        path: '/collections/:id',
     },
 ]
 

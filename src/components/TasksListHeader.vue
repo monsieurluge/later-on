@@ -1,10 +1,10 @@
 <template>
     <menu>
-        <div class="content-wrapper" :class="{ hidden: appState.isTaskDragging }">
+        <div class="content-wrapper" :class="{ hidden: appStateStore.isTaskDragging }">
             <ListSwitcherButton :label="list" @click="switchList" />
-            <TaskEditButton v-if="hasTasks" :isActive="appState.isEdit" @click="toggleEdit" />
+            <TaskEditButton v-if="hasTasks" :isActive="appStateStore.isEdit" @click="toggleEdit" />
         </div>
-        <div class="content-wrapper" :class="{ hidden: !appState.isTaskDragging }">
+        <div class="content-wrapper" :class="{ hidden: !appStateStore.isTaskDragging }">
             <ToNextListTaskDropZone :label="nextListLabel" @task-dropped="moveTask" />
             <RemoveTaskDropZone @task-dropped="removeTask" />
         </div>
@@ -13,7 +13,6 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
 import { useAppState } from '@/stores/appState'
 import { useTasks } from '@/stores/tasks'
 import ListSwitcherButton from './ListSwitcherButton'
@@ -21,36 +20,34 @@ import ToNextListTaskDropZone from './ToNextListTaskDropZone'
 import TaskEditButton from './TaskEditButton'
 import RemoveTaskDropZone from './RemoveTaskDropZone'
 
-const appState = useAppState()
-const router = useRouter()
-const tasks = useTasks()
+const appStateStore = useAppState()
+const tasksStore = useTasks()
 
 defineProps({
     list: { type: String, required: true },
 })
 
 const hasTasks = computed(() => {
-    const list = appState.list === 'today' ? tasks.fromToday : tasks.fromTomorrow
+    const list = tasksStore.list === 'today' ? tasksStore.fromToday : tasksStore.fromTomorrow
     return list.length > 0
 })
-const nextListLabel = computed(() => appState.nextList === 'today' ? '→ to today' : '→ later on')
+const nextListLabel = computed(() => tasksStore.nextList === 'today' ? '→ to today' : '→ later on')
 
 function moveTask(name) {
-    tasks.moveToNextList(name)
+    tasksStore.moveToNextList(name)
 }
 
 function removeTask(name) {
-    tasks.remove(name)
+    tasksStore.remove(name)
 }
 
 function switchList() {
-    appState.toState('idle')
-    appState.toNextList()
-    router.push({ name: appState.list === 'today' ? 'today' : 'tomorrow' })
+    appStateStore.toState('idle')
+    tasksStore.toNextList()
 }
 
 function toggleEdit() {
-    appState.toggleEdit()
+    appStateStore.toggleEdit()
 }
 </script>
 

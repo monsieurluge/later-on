@@ -1,20 +1,15 @@
 <template>
     <nav class="collections">
-        <RouterLink
-            class="collection-item"
-            v-for="collection in tasksStore.collections"
-            :class="[{ active: tasksStore.collection === collection.id }]"
-            :key="collection.id"
-            :to="`/collections/${collection.id}`"
-        >{{ collection.id }}</RouterLink>
-        <button class="collection-item" @click="tasksStore.createCollection()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="10px" height="10px" viewBox="0 0 20 20"><path fill="currentColor" d="M11 9V4H9v5H4v2h5v5h2v-5h5V9z"/></svg>
+        <CollectionsNavLink v-for="collection in tasksStore.collectionsInfos" :key="collection.id" v-bind="collection" />
+        <button @click="tasksStore.createCollection()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><g fill="currentColor"><path d="M5 11a1 1 0 1 1 0-2h10a1 1 0 1 1 0 2z"/><path d="M9 5a1 1 0 0 1 2 0v10a1 1 0 1 1-2 0z"/></g></svg>
         </button>
     </nav>
 </template>
 
 <script setup>
 import { useTasks } from '@/stores/tasks'
+import CollectionsNavLink from './CollectionsNavLink'
 
 const tasksStore = useTasks()
 </script>
@@ -32,46 +27,33 @@ const tasksStore = useTasks()
     background-color: var(--background);
 }
 
-.collection-item {
+button {
     height: var(--item-height-small);
     width: var(--item-height);
     padding: 0;
     margin: 0;
-    color: transparent;
     background-color: var(--b-low);
+    border: none;
     border-radius: var(--border-radius-small);
     transition: background-color var(--transition);
     overflow: hidden;
 }
 
-.collection-item.active {
-    background-color: var(--f-med);
-    cursor: default;
-}
-
-.collection-item:hover {
+button:hover {
     background-color: var(--b-med);
 }
 
-a.collection-item {
-    display: block;
-}
-
-a:active.collection-item {
-    background-color: var(--b-med-alt);
-}
-
-button.collection-item {
-    border: none;
-}
-
-button.collection-item svg {
+button svg {
     height: var(--item-height-small);
     width: var(--item-height-small);
     color: var(--f-low);
 }
 
-button.collection-item:active svg {
+button:hover svg {
+    color: var(--f-high);
+}
+
+button:active svg {
     color: var(--f-med);
 }
 </style>

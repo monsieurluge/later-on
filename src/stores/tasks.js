@@ -14,6 +14,16 @@ export const useTasks = defineStore('tasks', {
         fromToday: state => state.tasks.filter(task => task.list === 'today' && task.collection === state.collection),
         fromTomorrow: state => state.tasks.filter(task => task.list === 'tomorrow' && task.collection === state.collection),
         nextList: state => (state.list === 'today' ? 'tomorrow' : 'today'),
+        collectionsInfos: state => state.collections.map(collection => {
+            const todayCount = state.tasks.filter(task => task.list === 'today' && !task.done && task.collection === collection.id).length
+            const tomorrowCount = state.tasks.filter(task => task.list === 'tomorrow' && !task.done && task.collection === collection.id).length
+            return {
+                id: collection.id,
+                todayCount,
+                tomorrowCount,
+                total: todayCount + tomorrowCount,
+            }
+        })
     },
     actions: {
         add({ name, list }) {

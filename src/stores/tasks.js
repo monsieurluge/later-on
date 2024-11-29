@@ -120,6 +120,11 @@ export const useTasks = defineStore('tasks', {
         toNextList() {
             this.list = this.nextList
         },
+        toNewCollection(name) {
+            this.createCollection()
+            const collection = this.collections.slice(-1)[0].id
+            this.toCollection({ collection, name })
+        },
         toState(newState) {
             this.state = newState
         },

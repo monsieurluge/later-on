@@ -4,7 +4,7 @@
         :class="classObject"
         :to="`/collections/${id}`"
         @dragleave="onDragLeave"
-        @dragover="onDragOver"
+        @dragover.prevent.stop="onDragOver"
         @drop="onDrop"
     >
         <svg v-if="todayCount > 0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="currentColor" d="M16.5 10a6.5 6.5 0 1 1-13 0a6.5 6.5 0 0 1 13 0"/></svg>

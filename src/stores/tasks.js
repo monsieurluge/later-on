@@ -112,6 +112,11 @@ export const useTasks = defineStore('tasks', {
             task.done = !task.done
             task.lastUpdated = Date.now()
         },
+        toCollection({ collection, name }) {
+            const task = this.tasks.find(task => task.name === name)
+            task.collection = collection
+            task.list = 'today'
+        },
         toNextList() {
             this.list = this.nextList
         },

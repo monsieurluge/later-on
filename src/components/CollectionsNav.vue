@@ -20,11 +20,13 @@ const tasksStore = useTasks()
     justify-content: flex-start;
     gap: 3px;
     width: fit-content;
+    height: var(--item-height-small);
     max-width: 100%;
     padding-top: 3px;
     padding-bottom: 3px;
     margin-bottom: 80px;
     background-color: var(--background);
+    overflow: visible;
 }
 
 button {

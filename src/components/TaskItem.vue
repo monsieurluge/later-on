@@ -1,11 +1,5 @@
 <template>
-    <li
-        draggable="true"
-        :class="{ dragged: isDragged }"
-        @dragend="onDragEnd"
-        @dragover="onDragOver"
-        @dragstart="onDragStart"
-    >
+    <li draggable="true" ref="drop-zone" :class="{ dragged: isDragged }" @dragend="onDragEnd" @dragstart="onDragStart">
         <span class="task-name" :class="{ done, working }" :title="name">{{ name }}</span>
         <div class="task-actions">
             <TaskButton @clicked="$emit('sizeClicked')">
@@ -19,10 +13,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { isStringDragEvent } from '@/common/dragAndDrop'
+import { useTemplateRef, ref, watch } from 'vue'
 import { useAppState } from '@/stores/appState'
 import TaskButton from './TaskButton'
+import { useTaskDropZone } from '@/composables/taskDropZone'
 
 const emit = defineEmits(['sizeClicked', 'dragOverBottom', 'dragOverTop'])
 
@@ -34,19 +28,13 @@ const props = defineProps({
 })
 
 const appState = useAppState()
+const dropZone = useTemplateRef('drop-zone')
 const isDragged = ref(false)
+const { isOverBottom, isOverTop } = useTaskDropZone({ name: 'task', target: dropZone })
 
-function onDragOver(event) {
-    if (!isStringDragEvent(event)) return
-    event.preventDefault()
-    event.stopPropagation()
-    appState.setDropTarget('task')
-    const targetRect = event.target.getBoundingClientRect()
-    const pos = event.clientY - targetRect.top
-    pos < targetRect.height / 2
-        ? emit('dragOverTop', props.name)
-        : emit('dragOverBottom', props.name)
-}
+watch(isOverBottom, value => (value === true) && emit('dragOverBottom', props.name))
+
+watch(isOverTop, value => (value === true) && emit('dragOverTop', props.name))
 
 function onDragStart(event) {
     event.dataTransfer.effectAllowed = 'move'

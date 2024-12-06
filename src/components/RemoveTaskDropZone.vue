@@ -1,39 +1,25 @@
 <template>
-    <div
-        class="task-drop-zone"
-        :class="{ target: isDropTarget }"
-        @dragleave="isDropTarget = false"
-        @dragover="onDragOver"
-        @drop="onDrop"
-    >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="1rem" height="1rem"><path fill="currentColor" d="M17 2h-3.5l-1-1h-5l-1 1H3v2h14zM4 17a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V5H4z"/></svg>
+    <div ref="drop-zone" class="task-drop-zone" :class="{ target: isDropTarget }">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="1rem" height="1rem">
+            <path fill="currentColor" d="M17 2h-3.5l-1-1h-5l-1 1H3v2h14zM4 17a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V5H4z" />
+        </svg>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { isStringDragEvent } from '@/common/dragAndDrop'
-import { useAppState } from '@/stores/appState'
+import { ref, useTemplateRef, watch } from 'vue'
+import { useTaskDropZone } from '@/composables/taskDropZone'
 
-const appState = useAppState()
 const emit = defineEmits(['taskDropped'])
+const dropZone = useTemplateRef('drop-zone')
 const isDropTarget = ref(false)
+const { isOver } = useTaskDropZone({
+    name: 'remove task',
+    onDrop: ({ name }) => emit('taskDropped', name),
+    target: dropZone,
+})
 
-function onDragOver(event) {
-    if (!isStringDragEvent(event)) return
-    event.preventDefault()
-    event.stopPropagation()
-    isDropTarget.value = true
-    appState.setDropTarget('task-drop-zone')
-}
-
-function onDrop(event) {
-    if (!isStringDragEvent(event)) return
-    event.preventDefault()
-    event.stopPropagation()
-    isDropTarget.value = false
-    emit('taskDropped', event.dataTransfer.getData('taskName'))
-}
+watch(isOver, value => isDropTarget.value = value)
 </script>
 
 <style scoped>
@@ -46,7 +32,7 @@ function onDrop(event) {
     background-color: var(--b-low);
     transition:
         color var(--transition),
-        background-color var(--transition),
+        background-color var(--transition);
 }
 
 .large {

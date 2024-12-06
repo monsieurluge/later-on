@@ -1,11 +1,9 @@
 <template>
     <RouterLink
         class="collection-item"
+        ref="drop-zone"
         :class="classObject"
         :to="`/collections/${id}`"
-        @dragleave="onDragLeave"
-        @dragover.prevent.stop="onDragOver"
-        @drop="onDrop"
     >
         <svg v-if="todayCount > 0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="currentColor" d="M16.5 10a6.5 6.5 0 1 1-13 0a6.5 6.5 0 0 1 13 0"/></svg>
         <svg v-if="todayCount === 0 && tomorrowCount > 0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="currentColor" fill-rule="evenodd" d="M10 5.5a4.5 4.5 0 1 0 0 9a4.5 4.5 0 0 0 0-9M3.5 10a6.5 6.5 0 1 1 13 0a6.5 6.5 0 0 1-13 0" clip-rule="evenodd"/></svg>
@@ -14,10 +12,10 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import { isStringDragEvent } from '@/common/dragAndDrop'
+import { computed, ref, useTemplateRef, watch } from 'vue'
 import { useAppState } from '@/stores/appState'
 import { useTasks } from '@/stores/tasks'
+import { useTaskDropZone } from '@/composables/taskDropZone'
 
 const props = defineProps({
     id: { type: String, required: true },
@@ -27,38 +25,22 @@ const props = defineProps({
 })
 
 const appStore = useAppState()
+const dropZone = useTemplateRef('drop-zone')
 const tasksStore = useTasks()
 const isDropTarget = ref(false)
+const { isOver } = useTaskDropZone({
+    name: 'collection item',
+    onDrop: ({ name }) => tasksStore.toCollection({ collection: props.id, name }),
+    target: dropZone,
+})
+
+watch(isOver, value => isDropTarget.value = value)
 
 const classObject = computed(() => ({
     active: tasksStore.collection === props.id,
     expanded: appStore.isTaskDragging,
     target: isDropTarget.value,
 }))
-
-function onDragLeave() {
-    isDropTarget.value = false
-}
-
-function onDragOver(event) {
-    if (!isStringDragEvent(event)) return
-    event.preventDefault()
-    event.stopPropagation()
-    appStore.setDropTarget('collection item')
-    isDropTarget.value = true
-}
-
-function onDrop(event) {
-    isDropTarget.value = false
-    const task = event.dataTransfer.getData('taskName')
-    if (!task) return
-    event.preventDefault()
-    event.stopPropagation()
-    tasksStore.toCollection({
-        collection: props.id,
-        name: task,
-    })
-}
 </script>
 
 <style scoped>

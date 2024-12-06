@@ -1,41 +1,25 @@
 <template>
-    <div
-        class="task-drop-zone"
-        :class="{ target: isDropTarget }"
-        @dragleave="isDropTarget = false"
-        @dragover="onDragOver"
-        @drop="onDrop"
-    >{{ label }}</div>
+    <div class="task-drop-zone" ref="drop-zone" :class="{ target: isDropTarget }">{{ label }}</div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { isStringDragEvent } from '@/common/dragAndDrop'
-import { useAppState } from '@/stores/appState'
+import { ref, useTemplateRef, watch } from 'vue'
+import { useTaskDropZone } from '@/composables/taskDropZone'
 
 defineProps({
     label: { type: String, required: true },
 })
 
-const appState = useAppState()
+const dropZone = useTemplateRef('drop-zone')
 const emit = defineEmits(['taskDropped'])
 const isDropTarget = ref(false)
+const { isOver } = useTaskDropZone({
+    name: 'next list',
+    onDrop: ({ name }) => emit('taskDropped', name),
+    target: dropZone,
+})
 
-function onDragOver(event) {
-    if (!isStringDragEvent(event)) return
-    event.preventDefault()
-    event.stopPropagation()
-    isDropTarget.value = true
-    appState.setDropTarget('task-drop-zone')
-}
-
-function onDrop(event) {
-    if (!isStringDragEvent(event)) return
-    event.preventDefault()
-    event.stopPropagation()
-    isDropTarget.value = false
-    emit('taskDropped', event.dataTransfer.getData('taskName'))
-}
+watch(isOver, value => isDropTarget.value = value)
 </script>
 
 <style scoped>
@@ -51,7 +35,7 @@ function onDrop(event) {
     background-color: var(--b-low);
     transition:
         color var(--transition),
-        background-color var(--transition),
+        background-color var(--transition);
 }
 
 .target {

@@ -1,14 +1,16 @@
 <template>
     <div ref="drop-zone" class="task-drop-zone" :class="{ target: isDropTarget }">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="1rem" height="1rem">
-            <path fill="currentColor" d="M17 2h-3.5l-1-1h-5l-1 1H3v2h14zM4 17a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V5H4z" />
-        </svg>
+        <slot>{{ label }}</slot>
     </div>
 </template>
 
 <script setup>
 import { ref, useTemplateRef, watch } from 'vue'
 import { useTaskDropZone } from '@/composables/taskDropZone'
+
+defineProps({
+    label: { type: String },
+})
 
 const emit = defineEmits(['taskDropped'])
 const dropZone = useTemplateRef('drop-zone')
@@ -24,20 +26,18 @@ watch(isOver, value => isDropTarget.value = value)
 
 <style scoped>
 .task-drop-zone {
-    width: var(--item-height);
+    min-width: var(--item-height);
     height: var(--item-height);
+    flex: 1;
     color: var(--f-high);
+    font-family: monospace, sans;
+    font-size: 1rem;
     line-height: var(--item-height);
     text-align: center;
     background-color: var(--b-low);
     transition:
         color var(--transition),
         background-color var(--transition);
-}
-
-.large {
-    width: 100%;
-    flex: 1;
 }
 
 .target {

@@ -2,21 +2,21 @@
     <li draggable="true" ref="drop-zone" :class="{ dragged: isDragged }" @dragend="onDragEnd" @dragstart="onDragStart">
         <span class="task-name" :class="{ done, working }" :title="name">{{ name }}</span>
         <div class="task-actions">
-            <TaskButton @clicked="$emit('sizeClicked')">
+            <ActionButton @clicked="$emit('sizeClicked')">
                 <template v-if="size === 'none'">•</template>
                 <template v-if="size === 'small'">S</template>
                 <template v-if="size === 'medium'">M</template>
                 <template v-if="size === 'large'">L</template>
-            </TaskButton>
+            </ActionButton>
         </div>
     </li>
 </template>
 
 <script setup>
 import { useTemplateRef, ref, watch } from 'vue'
-import { useAppState } from '@/stores/appState'
-import TaskButton from './TaskButton'
 import { useTaskDropZone } from '@/composables/taskDropZone'
+import { useAppState } from '@/stores/appState'
+import ActionButton from './ActionButton'
 
 const emit = defineEmits(['sizeClicked', 'dragOverBottom', 'dragOverTop'])
 

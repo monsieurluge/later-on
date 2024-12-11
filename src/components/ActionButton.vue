@@ -1,11 +1,12 @@
 <template>
-    <button :title="title" @click.prevent.stop="$emit('clicked')">
+    <button :title="title" :class="{ toggled }" @click.prevent.stop="$emit('clicked')">
         <slot></slot>
     </button>
 </template>
 
 <script setup>
 defineProps({
+    toggled: { type: [Boolean, String] },
     title: { type: String, default: ''},
 })
 </script>
@@ -15,8 +16,8 @@ button {
     height: var(--item-button-size);
     width: var(--item-button-size);
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     color: var(--f-low);
     font-family: monospace, sans;
     font-size: 0.8rem;
@@ -32,10 +33,24 @@ button {
 }
 
 button:hover {
+    color: var(--f-high);
     background-color: var(--b-med);
 }
 
 button:active {
     color: var(--f-med);
+}
+
+button.toggled {
+    color: var(--b-low);
+    background-color: var(--f-med);
+}
+
+button.toggled:hover {
+    color: var(--b-med);
+}
+
+button.toggled:active {
+    color: var(--b-low);
 }
 </style>

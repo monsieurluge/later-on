@@ -25,7 +25,6 @@ export function useTaskDropZone({ name = 'drop zone', onDrop = doNothing, target
         if (type === 'dragover') {
             event.preventDefault()
             event.stopPropagation()
-            console.log('is over')
             isOver.value = true
             appStateStore.setDropTarget(name)
             const targetRect = event.target.getBoundingClientRect()

@@ -1,10 +1,12 @@
 <template>
-    <button>{{ label }}</button>
+    <button :class="{ bold, left }">{{ label }}</button>
 </template>
 
 <script setup>
 defineProps({
+    bold: { type: [Boolean, String] },
     label: { type: String, required: true },
+    left: { type: [Boolean, String] },
 })
 </script>
 
@@ -16,8 +18,7 @@ button {
     color: var(--f-high);
     font-family: monospace, sans;
     font-size: 1rem;
-    font-weight: bold;
-    text-align: left;
+    text-align: center;
     border: none;
     background-color: var(--b-low);
     overflow: hidden;
@@ -32,5 +33,13 @@ button:hover {
 
 button:active {
     color: var(--f-med);
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.left {
+    text-align: left;
 }
 </style>

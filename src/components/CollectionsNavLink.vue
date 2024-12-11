@@ -1,13 +1,10 @@
 <template>
-    <RouterLink
-        class="collection-item"
-        ref="drop-zone"
-        :class="classObject"
-        :to="`/collections/${id}`"
-    >
-        <svg v-if="todayCount > 0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="currentColor" d="M16.5 10a6.5 6.5 0 1 1-13 0a6.5 6.5 0 0 1 13 0"/></svg>
-        <svg v-if="todayCount === 0 && tomorrowCount > 0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="currentColor" fill-rule="evenodd" d="M10 5.5a4.5 4.5 0 1 0 0 9a4.5 4.5 0 0 0 0-9M3.5 10a6.5 6.5 0 1 1 13 0a6.5 6.5 0 0 1-13 0" clip-rule="evenodd"/></svg>
-        <svg v-if="total === 0" class="done" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="m13 24l-9-9l1.414-1.414L13 21.171L26.586 7.586L28 9z"/></svg>
+    <RouterLink class="collection-item" ref="drop-zone" :class="classObject" :to="`/collections/${id}`">
+        <ItemIcon v-if="todayCount > 0" which="fullcircle" small />
+        <ItemIcon v-if="todayCount === 0 && tomorrowCount > 0" which="circle" small />
+        <svg v-if="total === 0" class="done" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+            <path fill="currentColor" d="m13 24l-9-9l1.414-1.414L13 21.171L26.586 7.586L28 9z" />
+        </svg>
     </RouterLink>
 </template>
 
@@ -16,6 +13,7 @@ import { computed, ref, useTemplateRef, watch } from 'vue'
 import { useAppState } from '@/stores/appState'
 import { useTasks } from '@/stores/tasks'
 import { useTaskDropZone } from '@/composables/taskDropZone'
+import ItemIcon from './ItemIcon'
 
 const props = defineProps({
     id: { type: String, required: true },
@@ -34,7 +32,7 @@ const { isOver } = useTaskDropZone({
     target: dropZone,
 })
 
-watch(isOver, value => isDropTarget.value = value)
+watch(isOver, value => (isDropTarget.value = value))
 
 const classObject = computed(() => ({
     active: tasksStore.collection === props.id,

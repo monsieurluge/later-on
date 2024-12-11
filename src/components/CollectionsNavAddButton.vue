@@ -1,6 +1,6 @@
 <template>
     <button :class="classObject" @dragleave="onDragLeave" @dragover.prevent.stop="onDragOver" @drop="onDrop">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><g fill="currentColor"><path d="M5 11a1 1 0 1 1 0-2h10a1 1 0 1 1 0 2z" /><path d="M9 5a1 1 0 0 1 2 0v10a1 1 0 1 1-2 0z" /></g></svg>
+        <ItemIcon which="add" small />
     </button>
 </template>
 
@@ -8,6 +8,7 @@
 import { computed, ref } from 'vue'
 import { useAppState } from '@/stores/appState'
 import { useTasks } from '@/stores/tasks'
+import ItemIcon from './ItemIcon'
 
 const appStore = useAppState()
 const isDropTarget = ref(false)
@@ -43,37 +44,32 @@ button {
     width: var(--item-height);
     padding: 0;
     margin: 0;
+    color: var(--f-low);
+    line-height: var(--item-height-small);
     background-color: var(--b-low);
     border: none;
     border-radius: var(--border-radius-small);
     transition:
         max-height var(--transition),
         min-height var(--transition),
+        line-height var(--transition),
         background-color var(--transition);
     overflow: hidden;
 }
 
 button:hover {
+    color: var(--f-high);
     background-color: var(--b-med);
 }
 
-button svg {
-    height: var(--item-height-small);
-    width: var(--item-height-small);
-    color: var(--f-low);
-}
-
-button:hover svg {
-    color: var(--f-high);
-}
-
-button:active svg {
+button:active {
     color: var(--f-med);
 }
 
 .expanded {
     max-height: var(--item-height);
     min-height: var(--item-height);
+    line-height: var(--item-height);
 }
 
 .target {

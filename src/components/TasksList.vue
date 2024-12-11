@@ -1,7 +1,7 @@
 <template>
     <div class="tasks-list">
         <TasksListHeader :list="list" />
-        <TaskAddForm @task-submitted="addTask" />
+        <TaskAddForm :tasksCount="tasksList.length" @task-submitted="addTask" />
         <ul @dragend="onDragEnd" @dragenter.prevent.stop @dragover.prevent.stop @drop="onDrop">
             <FakeTaskItem v-if="tasksList.length === 0" label="take a coffee, then add some tasks" />
             <template v-for="task in tasksList" :key="task.name">

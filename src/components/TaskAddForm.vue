@@ -1,6 +1,6 @@
 <template>
     <div class="dummy-element" v-if="appState.isEdit || appState.isTaskDragging"></div>
-    <form v-else :class="{ full: isInputFocused }" @submit.prevent="onSubmit">
+    <form v-else :class="{ full: isInputFocused || tasksCount === 0 }" @submit.prevent="onSubmit">
         <input
             placeholder="+ add a task"
             type="text"
@@ -15,6 +15,10 @@
 <script setup>
 import { ref } from 'vue'
 import { useAppState } from '@/stores/appState'
+
+defineProps({
+    tasksCount: { required: true, type: Number },
+})
 
 const appState = useAppState()
 const emit = defineEmits(['taskSubmitted'])

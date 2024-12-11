@@ -47,10 +47,12 @@ export const useTasks = defineStore('tasks', {
             task.lastUpdated = Date.now()
         },
         createCollection() {
+            const id = randomString(8)
             this.collections.push({
-                id: randomString(8),
+                id,
                 permanent: false,
             })
+            this.collection = id
         },
         fetchTasks() {
             this.tasks = this.tasks

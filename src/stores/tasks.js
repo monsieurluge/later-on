@@ -92,6 +92,12 @@ export const useTasks = defineStore('tasks', {
             const index = this.tasks.indexOf(task)
             this.tasks.splice(index, 1)
         },
+        removeCurrentCollection() {
+            if (this.collection === 'default') return
+            this.tasks.filter(task => task.collection === this.collection).forEach(task => this.remove(task.name))
+            this.collections = this.collections.filter(collection => collection.id !== this.collection)
+            this.collection = 'default'
+        },
         rename({ newName, oldName }) {
             const task = this.tasks.find(task => task.name === oldName)
             if (!task) return

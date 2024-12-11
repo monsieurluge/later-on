@@ -3,8 +3,8 @@
         <div class="content-wrapper" :class="{ hidden: appStateStore.isTaskDragging }">
             <FullSizeButton bold left :label="list" @click="switchList" />
             <ul class="list-actions">
-                <li v-if="!appStateStore.isEdit">
-                    <ActionButton class="action-button"><ItemIcon which="remove" /></ActionButton>
+                <li v-if="!appStateStore.isEdit && tasksStore.collection !== 'default'">
+                    <ActionButton class="action-button" @click="tasksStore.removeCurrentCollection()"><ItemIcon which="remove" /></ActionButton>
                 </li>
                 <li :class="{ visible: appStateStore.isEdit }">
                     <ActionButton v-if="hasTasks" class="action-button" :toggled="appStateStore.isEdit" @click="toggleEdit">

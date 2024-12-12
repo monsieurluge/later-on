@@ -11,6 +11,11 @@ const routes = [
         name: 'collection',
         path: '/collections/:id',
     },
+    {
+        // when no route is found or valid, display the tasks list page
+        path: '/:pathMatch(.*)*',
+        redirect: '/',
+    },
 ]
 
 export default routes

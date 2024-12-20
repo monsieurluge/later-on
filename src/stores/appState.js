@@ -4,6 +4,7 @@ export const useAppState = defineStore('app-state', {
     state: () => ({
         lastDropTarget: null,
         state: 'idle',
+        isThemeEditorVisible: false,
     }),
     getters: {
         isEdit: (state) => state.state === 'edit',
@@ -16,6 +17,9 @@ export const useAppState = defineStore('app-state', {
         },
         toggleEdit() {
             this.state = this.isEdit ? 'idle' : 'edit'
+        },
+        toggleThemeEditor() {
+            this.isThemeEditorVisible = !this.isThemeEditorVisible
         },
         toState(newState) {
             this.state = newState

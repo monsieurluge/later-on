@@ -1,4 +1,5 @@
 import { themes } from './themes'
+import { ThemeEditor } from './theme-editor/theme-editor'
 
 const extractColors = svg => {
     return {
@@ -27,7 +28,8 @@ const isLightColor = hex => {
 
 const isSvgFile = ({ name }) => name.slice(name.lastIndexOf('.')) === '.svg'
 
-const isValidColorName = name => ['b_high', 'b_inv', 'b_low', 'b_max', 'b_med', 'background', 'f_high', 'f_inv', 'f_low', 'f_max', 'f_med'].includes(name)
+const isValidColorName = name =>
+    ['b_high', 'b_inv', 'b_low', 'b_max', 'b_med', 'background', 'f_high', 'f_inv', 'f_low', 'f_max', 'f_med'].includes(name)
 
 const isValidHexColor = value => /^#([0-9A-F]{3}){1,2}$/i.test(value)
 
@@ -35,9 +37,8 @@ const isValidColorTuple = ([name, hex]) => isValidColorName(name) && isValidHexC
 
 const toColorVariable = key => `--${key.replace('_', '-')}`
 
-const withMaxedColors = base => (isLightColor(base.background))
-    ? {...base, 'b_max': '#ffffff', 'f_max': '#000000' }
-    : {...base, 'b_max': '#000000', 'f_max': '#ffffff' }
+const withMaxedColors = base =>
+    isLightColor(base.background) ? { ...base, b_max: '#ffffff', f_max: '#000000' } : { ...base, b_max: '#000000', f_max: '#ffffff' }
 
 const fakeStorage = { getItem: () => null, setItem: () => {} }
 
@@ -104,6 +105,11 @@ export function createTheme({ dark = 'sandstorm', light = 'tape', storageKey = '
         reader.readAsText(file)
     }
 
+
+    function setColor({ property, color }) {
+        document.documentElement.style.setProperty(property, color)
+    }
+
     function storeColors({ colors, variant }) {
         const storedColors = JSON.parse(storage.getItem(storageKey) || '{}')
         storage.setItem(storageKey, JSON.stringify({ ...storedColors, [variant]: colors }))
@@ -114,6 +120,11 @@ export function createTheme({ dark = 'sandstorm', light = 'tape', storageKey = '
             mediaMatcher.addEventListener('change', event => applyStoredColorScheme(event.matches ? 'light' : 'dark'))
             window.addEventListener('dragover', onDragOver)
             window.addEventListener('drop', onDrop)
+            const editor = ThemeEditor(window)
+            editor.attachToDocument({ position: { top: '90px', left: '30px' }})
+            editor.plug().to(setColor)
+            window.displayThemeEditor ??= editor.display
+            window.hideThemeEditor ??= editor.hide
             applyStoredColorScheme(getCurrentVariant())
         },
     }

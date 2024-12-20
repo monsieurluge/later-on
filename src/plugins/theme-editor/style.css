@@ -1,0 +1,122 @@
+:root {
+    --ted-border-radius: 13px;
+    --ted-color-border: #cbc9c4;
+    --ted-color-dark: #756b62;
+    --ted-color-light: #edeae5;
+    --ted-module-border-radius: 4px;
+    --ted-module-gap: 1px;
+}
+
+#ted {
+    position: fixed;
+    padding: 8px;
+    background-color: var(--ted-color-border);
+    border-radius: var(--ted-border-radius);
+    border-top: 2px solid rgba(255, 255, 255, 0.5);
+    border-right: 2px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    border-left: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.ted_colors-scheme {
+    padding-top: 4px;
+    padding-bottom: 32px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+#ted_colors-scheme_wrapper {
+    width: 100%;
+    height: 100%;
+    padding: 22px;
+    display: grid;
+    grid-gap: 2px;
+    background-color: var(--background);
+    border-radius: var(--ted-border-radius);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.modules-grid {
+    padding: var(--ted-module-gap);
+    display: grid;
+    grid-gap: var(--ted-module-gap);
+    background-color: var(--ted-color-dark);
+    border-radius: var(--ted-module-border-radius);
+    overflow: hidden;
+}
+
+.ted_color {
+    width: 24px;
+    height: 24px;
+    grid-column-start: 0;
+    grid-column-end: 1;
+    grid-row-start: 0;
+    grid-row-end: 1;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+.ted_color.selected {
+    border: 2px solid crimson !important;
+}
+
+.ted_encoder {
+    position: relative;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ted_encoder-knob {
+    position: relative;
+    height: 30px;
+    width: 30px;
+    background-color: var(--ted-color-light);
+    border: 2px solid var(--ted-color-dark);
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+.ted_encoder-knob-marker {
+    position: absolute;
+    top: 1px;
+    left: 11px;
+    height: 9px;
+    width: 4px;
+    background-color: var(--ted-color-dark);
+    border-radius: 3px;
+}
+
+.ted_encoder-spot {
+    position: absolute;
+    top: calc(50% - 23px);
+    left: calc(50% - 2px);
+    height: 4px;
+    width: 4px;
+    background-color: #313131;
+    border-radius: 50%;
+}
+
+.ted_encoder.maxed .ted_encoder-spot {
+    background-color: #ff0030;
+    box-shadow: 0 0 4px #ff0030;
+}
+
+.ted-module {
+    background-color: var(--ted-color-light);
+    border-radius: var(--ted-module-border-radius);
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.hidden {
+    display: none !important;
+}

@@ -10,7 +10,6 @@
 
 <style scoped>
 li {
-    margin: 3px 0 0;
     height: var(--item-height);
     padding: 0 10px;
     color: var(--f-high);
@@ -19,9 +18,5 @@ li {
     line-height: var(--item-height);
     background-color: var(--b-low);
     border-radius: var(--border-radius);
-}
-
-li:not(:last-child) {
-    margin-bottom: 3px;
 }
 </style>

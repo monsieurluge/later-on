@@ -42,10 +42,6 @@ function onSubmit() {
     transition: background-color 0.3s;
 }
 
-.task-item:not(:last-child) {
-    margin-bottom: 3px;
-}
-
 .task-item:hover {
     background-color: var(--b-low-alt);
 }

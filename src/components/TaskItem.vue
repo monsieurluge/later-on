@@ -3,17 +3,14 @@
         <span class="task-name" :class="{ done, working }" :title="name">{{ name }}</span>
         <div class="task-actions">
             <ActionButton @clicked="$emit('sizeClicked')">
-                <template v-if="size === 'none'">•</template>
-                <template v-if="size === 'small'">S</template>
-                <template v-if="size === 'medium'">M</template>
-                <template v-if="size === 'large'">L</template>
+                {{ sizeButtonSymbol }}
             </ActionButton>
         </div>
     </li>
 </template>
 
 <script setup>
-import { useTemplateRef, ref, watch } from 'vue'
+import { computed, useTemplateRef, ref, watch } from 'vue'
 import { useTaskDropZone } from '@/composables/taskDropZone'
 import { useAppState } from '@/stores/appState'
 import ActionButton from './ActionButton'
@@ -32,9 +29,17 @@ const dropZone = useTemplateRef('drop-zone')
 const isDragged = ref(false)
 const { isOverBottom, isOverTop } = useTaskDropZone({ name: 'task', target: dropZone })
 
-watch(isOverBottom, value => (value === true) && emit('dragOverBottom', props.name))
+const sizeButtonSymbol = computed(() => ({
+        large: 'L',
+        medium: 'M',
+        none: '•',
+        small: 'S',
+    }[props.size])
+)
 
-watch(isOverTop, value => (value === true) && emit('dragOverTop', props.name))
+watch(isOverBottom, value => value === true && emit('dragOverBottom', props.name))
+
+watch(isOverTop, value => value === true && emit('dragOverTop', props.name))
 
 function onDragStart(event) {
     event.dataTransfer.effectAllowed = 'move'
@@ -69,10 +74,6 @@ li {
 
 li.dragged {
     display: none;
-}
-
-li:not(:last-child) {
-    margin-bottom: 3px;
 }
 
 li:hover {

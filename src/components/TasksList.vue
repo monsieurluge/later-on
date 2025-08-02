@@ -3,12 +3,25 @@
         <TasksListHeader :list="list" />
         <TaskAddForm :tasksCount="tasksList.length" @task-submitted="addTask" />
         <ul @dragend="onDragEnd" @dragenter.prevent.stop @dragover.prevent.stop @drop="onDrop">
-            <FakeTaskItem v-if="tasksList.length === 0" label="take a coffee, then add some tasks" />
+            <FakeTaskItem
+                v-if="tasksList.length === 0"
+                class="item"
+                label="take a coffee, then add some tasks"
+            />
             <template v-for="task in tasksList" :key="task.name">
-                <DummyTaskItem v-if="appState.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'top'" />
-                <TaskItemInput v-if="appState.isEdit" :name="task.name" @submit="rename" />
+                <DummyTaskItem
+                    v-if="appState.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'top'"
+                    class="item dummy-item"
+                />
+                <TaskItemInput
+                    v-if="appState.isEdit"
+                    class="item"
+                    :name="task.name"
+                    @submit="rename"
+                />
                 <TaskItem
                     v-else
+                    class="item"
                     :done="task.done"
                     :name="task.name"
                     :size="task.size"
@@ -20,6 +33,7 @@
                 />
                 <DummyTaskItem
                     v-if="appState.lastDropTarget === 'task' && dropTargetItem.name === task.name && dropTargetItem.position === 'bottom'"
+                    class="item dummy-item"
                 />
             </template>
         </ul>
@@ -47,11 +61,13 @@ const dropTargetItem = ref(fakeDropTargetItem)
 const tasks = useTasks()
 
 const currentTaskName = computed(() => {
-    const workingOn = tasks.tasks.filter(({ list }) => list === 'today').find(({ done }) => !done)
+    const workingOn = tasks.tasks
+        .filter(({ list }) => list === 'today')
+        .find(({ done }) => !done)
     return workingOn ? workingOn.name : ''
 })
 
-const tasksList = computed(() => props.list === 'today' ? tasks.fromToday : tasks.fromTomorrow)
+const tasksList = computed(() => (props.list === 'today' ? tasks.fromToday : tasks.fromTomorrow))
 
 function addTask(name) {
     tasks.add({ list: props.list, name })
@@ -96,7 +112,7 @@ function onDrop(event) {
     if (dropTargetItem.value.position === 'bottom') {
         tasks.moveAfter({
             name: event.dataTransfer.getData('taskName'),
-            target: dropTargetItem.value.name
+            target: dropTargetItem.value.name,
         })
     }
     dropTargetItem.value = fakeDropTargetItem
@@ -126,5 +142,9 @@ ul {
     margin: 3px 0 0 0;
     padding: 0;
     list-style: none;
+}
+
+.item:not(:last-child) {
+    margin-bottom: 3px;
 }
 </style>
